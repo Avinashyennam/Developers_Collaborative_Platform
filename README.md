@@ -8,8 +8,8 @@ facilitate knowledge sharing and enhance teamwork.
 
 Key Features:
 
-User Profiles
-Matching Algorithm
-Connection Requests
-Pending Requests Management
+User Profiles, 
+Matching Algorithm, 
+Connection Requests, 
+Pending Requests Management, 
 GitHub Project Integration
