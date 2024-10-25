@@ -1,34 +1,46 @@
 import React, { createContext, useEffect, useState } from "react";
-import * as jwt_decode from 'jwt-decode';
+import * as jwtDecode from 'jwt-decode';
 export const DevContext = createContext(null);
 
-const DevContextProvider = (props) => {
+const DevContextProvider = ({children}) => {
 
-    const [id, setId] = useState(null);
+    const [id, setUserId] = useState(null);
+    const [sap, setSap] = useState("for testing");
     const [isLogin, setIsLogin] = useState(() => {
         const token = localStorage.getItem('token');
         return token && token.length > 0 ? true : false;
     });
 
-    const getUserId = ()=>{
+    useEffect(()=>{
         const token = localStorage.getItem('token');
-        console.log(token);
-        if (!token) return null;
-        try{
-            const decoded = jwt_decode(token);
-            setId(decoded.id);
-            console.log("Id is ", id);
-        } catch{
-            console.error("Failed to decode token", error);
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                setUserId(decodedToken._id); // Use the correct key based on your token structure
+            } catch (error) {
+                console.error("Invalid token:", error);
+            }
         }
-    }
+    },[])
 
-    const contextValue = { id, setId, isLogin, setIsLogin };
+    // const getUserId = ()=>{
+    //     const token = localStorage.getItem('token');
+    //     console.log(token);
+    //     if (!token) return null;
+    //     try{
+    //         const decoded = jwt_decode(token);
+    //         setId(decoded.id);
+    //         console.log("Id is ", id);
+    //     } catch{
+    //         console.error("Failed to decode token", error);
+    //     }
+    // }
+
+    // const contextValue = ;
     return (
-        <DevContext.Provider value={contextValue}>
-            {props.children}
+        <DevContext.Provider value={{ id, setUserId, isLogin, setIsLogin, sap }}>
+            {children}
         </DevContext.Provider>
     )
 }
-
 export default DevContextProvider;

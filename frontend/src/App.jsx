@@ -5,7 +5,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home';
 import Matches from './pages/Matches';
 import Connections from './pages/Connections';
-import Pending from './PendingConn';
+import PendingConnections from './pages/PendingConn';
 import Login from './pages/Login';
 function App() {
   const [count, setCount] = useState(0)
@@ -18,7 +18,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/matches' element={<Matches />} />
           <Route path='/connections' element={<Connections />} />
-          <Route path='/pendingconnections' element={<Pending />} />
+          <Route path='/pendingconnections' element={<PendingConnections />} />
           <Route path='/login' element={<Login />} />
         </Routes>
       </BrowserRouter>

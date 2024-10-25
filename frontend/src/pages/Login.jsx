@@ -3,8 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { DevContext } from '../context/Context';
 const Login = () => {
     const [viewlogin, setLogin] = useState(true);
-    const {isLogin, setIsLogin} = useContext(DevContext);
-    const {id, setId} = useState(DevContext);
+    const { isLogin, setIsLogin, sap, id, setUserId } = useContext(DevContext);
+    console.log("sap is", sap);
+    console.log(setUserId);
+    // setUserId(1);
+    console.log(id);
+    console.log("isLogin before login", isLogin);
+    // const { setUserId } = useState(DevContext);
     const navigate = useNavigate();
     // const {isLogin, setIsLogin} = useContext(ShopContext);
     const [signupdata, setSignupdata] = useState({
@@ -76,12 +81,18 @@ const Login = () => {
             if (response.ok) {
                 console.log("Login successful");
                 let responseData = await response.json();
+                console.log("response is", responseData);
                 localStorage.setItem("token", responseData.token);
-                setId(responseData.user._id);
+                setIsLogin(true);
+                console.log("isLogin after login", isLogin);
+                const userId = responseData.user._id;
+                console.log("User ID:", userId);
+
+                setUserId(userId);
                 console.log("user id is ", responseData.user._id);
                 setIsLogin(true);
-                navigate('/'); 
-                setIsLogin(true);
+                navigate('/');
+
             }
             else {
                 alert("User not found");

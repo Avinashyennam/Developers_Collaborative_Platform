@@ -2,24 +2,31 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faFacebookF, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
 import { DevContext } from '../context/Context';
-
-const Matches =  () => {
+import connectUser from '../components/connectUser'
+const Matches = () => {
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const { id } = useContext(DevContext);
-    console.log("id is", id);
+    console.log("Current ID:", id);
+
 
     useEffect(() => {
         const fetchMatches = async () => {
+            if (!id) {
+                console.log("User ID is not set yet.");
+                return; // Exit if id is null
+            }
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/users/matchusers/:${id}`);
+                const response = await fetch(`http://localhost:5000/api/users/matchusers/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch matches');
                 }
 
                 const data = await response.json();
-                setMatches(data.matches);
+                console.log(data);
+                setMatches(data);
+                console.log(matches);
             } catch (error) {
                 console.log("failed to fetch users..");
             } finally {
@@ -27,47 +34,48 @@ const Matches =  () => {
             }
         }
         fetchMatches();
-    }, [])
+    }, [id])
+
+    const handleConnect = (recipientId) => {
+        connectUser(recipientId, id);
+    };
 
 
     if (loading) return <p>Loading matches...</p>;
     return (
-        <div className='mx-8 my-10'>
-            <div className='gap-6 flex flex-col'>
-                <h1 className='text-5xl'>"Discover Your Ideal Matches!"</h1>
-                <p className='text-2xl'>Explore developers who share your skills, interests, and experience level. Connect, collaborate, and turn ideas into reality with partners perfectly matched to you.</p>
+        <div className='mx-8 my-10 flex flex-col gap-10'>
+            <div className='gap-6 flex flex-col items-center'>
+                <h1 className='text-4xl'>"✨ Your Matches: Connect with Like-Minded Developers!"</h1>
+                <p className='text-xl'>Discover collaboration opportunities tailored for your skills and interests.</p>
             </div>
-            {/* <div className="flex flex-col items-center">
-                <img src="team-6.jpg" width={380} height={280} alt="not" />
-                <div className="flex flex-col items-center bg-white w-5/6 p-7 rounded-lg -mt-20 shadow-2xl">
-                    <div className="text-2xl font-semibold">Katherine Pierce</div>
-                    <div className="font-medium text-light-gray my-3">Senior Agent</div>
-                    <div className="flex gap-4">
-                        <div className="w-12 h-12 flex justify-center items-center border hover:bg-real-green transition-colors duration-300 text-light-gray hover:text-white rounded-lg"><FontAwesomeIcon icon={faFacebookF} style={{ width: "15px", height: "25px" }} /></div>
-                        <div className="w-12 h-12 flex justify-center items-center border hover:bg-real-green transition-colors duration-300 text-light-gray hover:text-white rounded-lg"><FontAwesomeIcon icon={faTwitter} style={{ width: "25px", height: "25px" }} /></div>
-                        <div className="w-12 h-12 flex justify-center items-center border hover:bg-real-green transition-colors duration-300 text-light-gray hover:text-white rounded-lg"><FontAwesomeIcon icon={faWhatsapp} style={{ width: "25px", height: "25px" }} /></div>
-                    </div>
-                </div>
-            </div> */}
 
-            <div>
-                <h2>Your Matches</h2>
-                {matches.length === 0 ? (
-                    <p>No matches found</p>
-                ) : (
-                    <ul>
-                        {matches.map((match) => (
+            <div className='flex flex-col items-center gap-10'>
+                <h2 className='text-2xl'>Your Matches</h2>
+                <ul className='flex gap-4'>
+                    {
+                        matches.map((match) => (
                             <li key={match._id}>
-                                <h3>{match.name}</h3>
-                                <p>Skills: {match.skills.join(', ')}</p>
-                                <p>Interests: {match.interests.join(', ')}</p>
-                                <p>Experience Level: {match.experienceLevel}</p>
+                                <div className="flex flex-col items-center" >
+                                    <img src="team-6.jpg" width={300} height={250} alt="not" />
+                                    <div className="flex flex-col items-center bg-white w-5/6 p-3 rounded-lg -mt-20 shadow-2xl">
+                                        <div className="text-2xl font-semibold">{match.name}</div>
+                                        <div className="font-medium text-light-gray my-3">{match.experienceLevel}</div>
+                                        <ul className="flex flex-wrap gap-2">
+                                            {match.skills.map((skill, index) => (
+                                                <li key={index} className="bg-light-gray text-black px-2 py-1 rounded-full">
+                                                    {skill}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <button className='w-24 h-10 hover:bg-red-500 transition-colors hover:text-white duration-300 rounded-lg border-[1px] border-slate-950 hover:border-0' onClick={() => handleConnect(match._id)}>Connect</button>
+                                    </div>
+                                </div>
                             </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </div>
+                        ))
+                    }
+                </ul>
+            </div >
+        </div >
     )
 }
 

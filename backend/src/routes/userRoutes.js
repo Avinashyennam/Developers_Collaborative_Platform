@@ -21,7 +21,7 @@ router.delete("/deleteaccount", deleteAcc);             // route to delete user 
 router.post("/connect", sendConnRequest);               // route to send connection request
 router.post("/accept", acceptConnRequest);              // route to accept connection request
 router.post("/reject", rejectConnRequest);              // route to reject connection request
-router.post("/pendingrequests/:id", pendingConnRequests)    // route to check pending connection reqs
+router.get("/pendingrequests/:id", pendingConnRequests)    // route to check pending connection reqs
 router.get("/connections/:id", connections);                // route to fetch connections of user
 // router.post("/uploadimage",upload.single('image'), uploadImage);
 module.exports = router;
