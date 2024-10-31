@@ -68,6 +68,10 @@ const acceptConnRequest = async (req, res) => {
         user.connections.push(requesterId);
         requester.connections.push(userId);
 
+        // Remove the requester from user's matches and user from requester's matches
+        user.matches = user.matches.filter((matchId) => matchId.toString() !== requesterId);
+        requester.matches = requester.matches.filter((matchId) => matchId.toString() !== userId);
+
         // save both users
         await user.save();
         await requester.save();
@@ -128,7 +132,7 @@ const pendingConnRequests = async (req, res) => {
         // Find the user by ID and populate the details of the users who sent the requests
         let user = await User.findById(id).populate({
             path: 'pendingConnections.from',          // Populate 'from' field with User details
-            select: 'name email skills'               // Select specific fields to return (optional)
+            select: 'name email skills profilePicture'               // Select specific fields to return (optional)
         })
 
         if (!user) {
@@ -150,7 +154,7 @@ const connections = async (req, res) =>{
 
         let user = await User.findById(id).populate({
             path: 'connections',
-            select: 'name email skills'
+            select: 'name email skills profilePicture'
         });
 
         if(!user){
