@@ -17,7 +17,7 @@ router.get("/:id/projects", getProjects);               // route to read project
 router.delete("/:id/projects/:projectId", deleteProject);   // route to delete specific project
 router.get("/:userId/projects/:projectId", specificProject)     // route to fetch specific project
 router.get("/matchusers/:id", matches);              // route to match users and calculate the matching score
-router.delete("/deleteaccount", deleteAcc);             // route to delete user account
+router.delete("/deleteaccount/:id", deleteAcc);             // route to delete user account
 router.post("/connect", sendConnRequest);               // route to send connection request
 router.post("/accept", acceptConnRequest);              // route to accept connection request
 router.post("/reject", rejectConnRequest);              // route to reject connection request

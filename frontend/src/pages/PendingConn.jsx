@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DevContext } from '../context/Context';
-import connectUser from '../components/connectUser'
+// import connectUser from '../components/connectUser'
+import AcceptUser from '../components/Accept';
+import RejectUser from '../components/Reject';
 const PendingConnections = () => {
     const [pendingConn, setPendingConn] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -32,8 +34,11 @@ const PendingConnections = () => {
         fetchPendingConn();
     }, [id]);
 
-    const handleConnect = (recipientId) => {
-        connectUser(recipientId, id);
+    const handleAccept = (requesterId) => {
+        AcceptUser(requesterId, id);
+    };
+    const handleReject = (requesterId) => {
+        RejectUser(requesterId, id);
     };
 
     if (loading) return <p>Loading matches...</p>;
@@ -50,12 +55,18 @@ const PendingConnections = () => {
                     {
                         pendingConn.map((match) => (
                             <li key={match.from._id}>
-                                <div className="flex flex-col items-center" >
-                                    <img src="team-6.jpg" width={300} height={250} alt="not" />
-                                    <div className="flex flex-col items-center bg-white w-5/6 p-3 rounded-lg -mt-20 shadow-2xl">
+                                <div className="flex flex-col items-center w-80" >
+                                    <div className="w-full h-72 overflow-hidden">
+                                        <img
+                                            src={match.from.profilePicture}
+                                            alt="not"
+                                            className='w-full h-full object-cover rounded-lg'
+                                        />
+                                    </div>
+                                    <div className="flex flex-col items-center bg-white w-5/6 p-3 rounded-lg -mt-12 shadow-2xl">
                                         <div className="text-2xl font-semibold">{match.from.name}</div>
                                         <div className="font-medium text-light-gray my-3">{match.from.email}</div>
-                                        <ul className="flex flex-wrap gap-2">
+                                        <ul className="flex flex-wrap gap-2 max-h-20 overflow-y-auto w-full justify-center">
                                             {match.from.skills.map((skill, index) => (
                                                 <li key={index} className="bg-light-gray text-black px-2 py-1 rounded-full">
                                                     {skill}
@@ -63,8 +74,9 @@ const PendingConnections = () => {
                                             ))}
                                         </ul>
                                         <p><strong>Requested At:</strong> {new Date(match.requestedAt).toLocaleString()}</p>
-                                        <div className=''>
-                                            <button className='w-24 h-10 hover:bg-red-500 transition-colors hover:text-white duration-300 rounded-lg border-[1px] border-slate-950 hover:border-0' onClick={() => handleConnect(match._id)}>Connect</button>
+                                        <div className='flex gap-4'>
+                                            <button className='w-24 h-10 hover:bg-red-500 transition-colors hover:text-white duration-300 rounded-lg border-[1px] border-slate-950 hover:border-0' onClick={() => handleAccept(match.from._id)}>Accept</button>
+                                            <button className='w-24 h-10 hover:bg-red-500 transition-colors hover:text-white duration-300 rounded-lg border-[1px] border-slate-950 hover:border-0' onClick={() => handleReject(match.from._id)}>Reject</button>
                                         </div>
                                     </div>
 

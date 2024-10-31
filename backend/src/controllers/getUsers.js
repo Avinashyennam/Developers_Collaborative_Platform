@@ -16,29 +16,32 @@ const getUsers = async (req, res) => {
 }
 
 // route for getting specific user
-const specificUser = async (req, res) =>{
+const specificUser = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const user = await User.findById(id);
-        if(!user){
-            return res.status(404).json({message: "user not found"});
+        if (!user) {
+            return res.status(404).json({ message: "user not found" });
         }
-        res.status(200).json({user});
+        res.status(200).json({ user });
     } catch (error) {
         console.log("Error while retriving specific user", error);
-        res.status(500).json({message: "Internal server error at specific user"});
+        res.status(500).json({ message: "Internal server error at specific user" });
     }
 }
 
 // route for updating user profile
 const updateProfile = async (req, res) => {
     try {
-        const { skills, interests, experienceLevel, bio } = req.body;
+        const { name, skills, interests, experienceLevel, bio } = req.body;
         const { id } = req.params;
 
         let user = await User.findById(id);
         if (user == null) {
             return res.status(404).json({ message: "user not found" });
+        }
+        if(name){
+            user.name = name;
         }
         if (skills && Array.isArray(skills)) {
             // Append new skills to the existing skills array without duplicates

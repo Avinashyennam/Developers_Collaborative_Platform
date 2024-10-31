@@ -1,13 +1,13 @@
-import React , {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { DevContext } from '../context/Context';
-const Connections = ()=>{
+const Connections = () => {
 
     const [connections, setConnections] = useState([]);
     const [loading, setLoading] = useState(true);
     const { id } = useContext(DevContext);
 
-    useEffect(()=>{
-        const fetchConnections = async()=>{
+    useEffect(() => {
+        const fetchConnections = async () => {
             if (!id) {
                 console.log("User ID is not set yet.");
                 return; // Exit if id is null
@@ -30,10 +30,10 @@ const Connections = ()=>{
             }
         }
         fetchConnections();
-    },[id]);
+    }, [id]);
 
     if (loading) return <p>Loading matches...</p>;
-    return(
+    return (
         <div className='mx-8 my-10 flex flex-col gap-8'>
             <div className='gap-6 flex flex-col items-center'>
                 <h1 className='text-4xl'>"🎉 You've Got Connections! Explore Your Network!"</h1>
@@ -46,12 +46,18 @@ const Connections = ()=>{
                     {
                         connections.map((match) => (
                             <li key={match._id}>
-                                <div className="flex flex-col items-center" >
-                                    <img src="team-6.jpg" width={300} height={250} alt="not" />
-                                    <div className="flex flex-col items-center bg-white w-5/6 p-3 rounded-lg -mt-20 shadow-2xl">
+                                <div className="flex flex-col items-center w-80" >
+                                    <div className="w-full h-72 overflow-hidden">
+                                        <img
+                                            src={match.profilePicture}
+                                            alt="not"
+                                            className='w-full h-full object-cover rounded-lg'
+                                        />
+                                    </div>
+                                    <div className="flex flex-col items-center bg-white w-5/6 p-3 rounded-lg -mt-12 shadow-2xl">
                                         <div className="text-2xl font-semibold">{match.name}</div>
                                         <div className="font-medium text-light-gray my-3">{match.email}</div>
-                                        <ul className="flex flex-wrap gap-2">
+                                        <ul className="flex flex-wrap gap-2 max-h-20 overflow-y-auto w-full justify-center">
                                             {match.skills.map((skill, index) => (
                                                 <li key={index} className="bg-light-gray text-black px-2 py-1 rounded-full">
                                                     {skill}
