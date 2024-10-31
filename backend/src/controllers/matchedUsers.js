@@ -5,7 +5,7 @@ const matches = async (req, res) => {
         const { id } = req.params;
         const user = await User.findById(id).populate({
             path: 'matches',
-            select: 'name email skills interests experienceLevel'
+            select: 'name email skills interests experienceLevel profilePicture'
         });
 
         if (!user) {
