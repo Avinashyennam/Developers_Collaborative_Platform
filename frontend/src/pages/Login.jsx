@@ -81,15 +81,15 @@ const Login = () => {
             if (response.ok) {
                 console.log("Login successful");
                 let responseData = await response.json();
-                console.log("response is", responseData);
+                // console.log("response is", responseData);
                 localStorage.setItem("token", responseData.token);
                 setIsLogin(true);
                 console.log("isLogin after login", isLogin);
                 const userId = responseData.user._id;
-                console.log("User ID:", userId);
+                // console.log("User ID:", userId);
 
                 setUserId(userId);
-                console.log("user id is ", responseData.user._id);
+                // console.log("user id is ", responseData.user._id);
                 setIsLogin(true);
                 navigate('/');
 
