@@ -3,3 +3,14 @@
   margin: 0;
   padding: 0;
 }
+
+.navbar {
+  background-color: black; /* Default color */
+  transition: background-color 0.3s ease; /* Smooth transition */
+  color: white
+}
+
+.navbar.scrolled {
+  background-color: #fff; /* Color after scroll */
+  color: black;
+}
