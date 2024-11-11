@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DevContext } from '../context/Context';
 import '../App.css';
-// import Login from '../pages/Login';
 let Navbar = () => {
 
     const { isLogin, setIsLogin } = useContext(DevContext);
@@ -12,18 +11,6 @@ let Navbar = () => {
         setIsLogin(false);
         localStorage.removeItem("token");
     };
-
-//     const [scrolled, setScrolled] = useState(false);
-
-//   useEffect(() => {
-//     const handleScroll = () => {
-//       const isScrolled = window.scrollY > 0;
-//       setScrolled(isScrolled);
-//     };
-
-//     window.addEventListener('scroll', handleScroll);
-//     return () => window.removeEventListener('scroll', handleScroll);
-//   }, []);
 
     return (
         <div>
@@ -51,10 +38,10 @@ let Navbar = () => {
                 </div>
                 <div>
                     {isLogin === true ?
-                        <div className='bg-slate-700 px-2 py-1 rounded-lg'>
-                            <Link to='/login'><button className='text-xl text-white flex items-center justify-center' onClick={handleLogout}>Logout</button></Link>
+                        <div className='bg-gray-200 px-2 py-1 rounded-lg'>
+                            <Link to='/login'><button className='text-xl text-black flex items-center justify-center' onClick={handleLogout}>Logout</button></Link>
                         </div> :
-                        <div className='bg-slate-700 px-2 py-1 rounded-lg'>
+                        <div className='bg-gray-200 px-2 py-1 rounded-lg'>
                             <Link to='/login'><button className='text-xl text-black flex items-center justify-center'>Login</button></Link>
                         </div>
                     }
