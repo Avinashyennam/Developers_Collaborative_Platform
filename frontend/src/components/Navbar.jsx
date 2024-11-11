@@ -13,23 +13,23 @@ let Navbar = () => {
         localStorage.removeItem("token");
     };
 
-    const [scrolled, setScrolled] = useState(false);
+//     const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 0;
-      setScrolled(isScrolled);
-    };
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       const isScrolled = window.scrollY > 0;
+//       setScrolled(isScrolled);
+//     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+//     window.addEventListener('scroll', handleScroll);
+//     return () => window.removeEventListener('scroll', handleScroll);
+//   }, []);
 
     return (
-        <div className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-            <div className='flex justify-between items-center mx-8'>
+        <div>
+            <div className='w-full flex justify-between items-center px-8 text-white bg-black'>
                 <div>
-                    <img src='/collab.png' alt='not found' className='w-32 h-20 rounded-full' />
+                    <img src='/logo-white.png' alt='not found' className='w-32 h-20 rounded-full' />
                 </div>
                 <div>
                     <ul className='flex justify-between gap-8 text-xl'>

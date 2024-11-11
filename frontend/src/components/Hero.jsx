@@ -18,7 +18,7 @@ const Hero = () => {
         <div style={styles}>
             <div className='flex flex-col justify-center items-center gap-10 mx-8 text-white'>
                 <div className='flex flex-col gap-8 justify-center items-center'>
-                    <h1 className='text-7xl'>Connect. Collaborate. Code</h1>
+                    <h1 className='text-7xl font-bold'>Connect. Collaborate. Code</h1>
                     <h3 className='text-2xl'>Join now and start building impactful projects with the perfect partners!</h3>
                 </div>
                 {/* <p>

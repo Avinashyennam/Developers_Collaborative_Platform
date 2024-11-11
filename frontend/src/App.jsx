@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Matches from './pages/Matches';
 import Connections from './pages/Connections';
@@ -21,6 +22,7 @@ function App() {
           <Route path='/pendingconnections' element={<PendingConnections />} />
           <Route path='/login' element={<Login />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   )
