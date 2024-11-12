@@ -1,11 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { DevContext } from '../context/Context';
 import '../App.css';
 let Navbar = () => {
 
-    const { isLogin, setIsLogin } = useContext(DevContext);
+    const { isLogin, setIsLogin, user } = useContext(DevContext);
+    const [open, setOpen] = useState(false);
+    const dropdownRef = useRef(null);
     console.log(isLogin);
+
+    const closeDropdown = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setIsOpen(false);
+        }
+    };
+    useEffect(() => {
+        // Add event listener when the component mounts
+        document.addEventListener('mousedown', closeDropdown);
+        return () => {
+            // Clean up the event listener when the component unmounts
+            document.removeEventListener('mousedown', closeDropdown);
+        };
+    }, []);
 
     const handleLogout = () => {
         setIsLogin(false);
@@ -24,32 +40,43 @@ let Navbar = () => {
                         <Link to="/matches"><li>Matches</li></Link>
                         <Link to="/connections"><li>Connections</li></Link>
                         <Link to="/pendingconnections"><li>Pending Connections</li></Link>
-
-                        {/* <Link href="#home"><li>Home</li></Link>
-                        <Link href="#matches"><li>Matches</li></Link>
-                        <Link href="#connections"><li>Connections</li></Link>
-                        <Link href="#pending"><li>Pending Connections</li></Link> */}
-
-                        {/* <li><a href="#home" style="scroll-behavior: smooth;">Home</a></li>
-                        <li><a href="#matches">Matches</a></li>
-                        <li><a href="#connections">Connections</a></li>
-                        <li><a href="#pending">Pending</a></li> */}
                     </ul>
                 </div>
                 <div>
-                    {isLogin === true ?
-                        <div className='bg-gray-200 px-2 py-1 rounded-lg'>
-                            <Link to='/login'><button className='text-xl text-black flex items-center justify-center' onClick={handleLogout}>Logout</button></Link>
-                        </div> :
-                        <div className='bg-gray-200 px-2 py-1 rounded-lg'>
-                            <Link to='/login'><button className='text-xl text-black flex items-center justify-center'>Login</button></Link>
-                        </div>
+                    {
+                        localStorage.getItem("token") ?
+                            <div className=''>
+                                <img
+                                    src={user.profilePicture}
+                                    alt='Avatar'
+                                    width={50}
+                                    height={50}
+                                    className='rounded-full object-cover border border-gray-200'
+                                    style={{ width: '60px', height: '60px' }}
+                                    onClick={() => setOpen(!open)}
+                                />
+
+                                {open && (
+                                    <div
+                                        ref={dropdownRef}
+                                        className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded shadow-lg"
+                                    >
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 rounded"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                            :
+                            <div className='bg-gray-200 px-2 py-1 rounded-lg'>
+                                <Link to='/login'><button className='text-xl text-black flex items-center justify-center'>Login</button></Link>
+                            </div>
                     }
-                    {/* <Link to="/login"><button>Login</button></Link> */}
-                    {/* <img src="/avatar.webp" alt='not found' className='w-24 h-24 rounded-full' /> */}
                 </div>
             </div>
-            {/* <hr></hr> */}
         </div>
     )
 }

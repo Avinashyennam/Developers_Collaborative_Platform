@@ -5,7 +5,7 @@ export const DevContext = createContext(null);
 const DevContextProvider = ({children}) => {
 
     const [id, setUserId] = useState(null);
-    const [sap, setSap] = useState("for testing");
+    const [user, setUser] = useState(null);
     const [isLogin, setIsLogin] = useState(() => {
         const token = localStorage.getItem('token');
         return token && token.length > 0 ? true : false;
@@ -38,7 +38,7 @@ const DevContextProvider = ({children}) => {
 
     // const contextValue = ;
     return (
-        <DevContext.Provider value={{ id, setUserId, isLogin, setIsLogin, sap }}>
+        <DevContext.Provider value={{ id, setUserId, isLogin, setIsLogin, user, setUser }}>
             {children}
         </DevContext.Provider>
     )

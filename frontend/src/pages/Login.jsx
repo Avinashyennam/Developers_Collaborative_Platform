@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { DevContext } from '../context/Context';
 const Login = () => {
     const [viewlogin, setLogin] = useState(true);
-    const { isLogin, setIsLogin, sap, id, setUserId } = useContext(DevContext);
+    const { isLogin, setIsLogin, sap, id, setUserId, setUser, user } = useContext(DevContext);
     console.log("sap is", sap);
     console.log(setUserId);
     // setUserId(1);
@@ -57,6 +57,8 @@ const Login = () => {
                 //console.log(responseData);
                 localStorage.setItem("token", responseData.token);
                 setIsLogin(true);
+                setUser(responseData.user);
+                console.log(user)
             }
             else {
                 alert("User already exists");
@@ -91,6 +93,8 @@ const Login = () => {
                 setUserId(userId);
                 // console.log("user id is ", responseData.user._id);
                 setIsLogin(true);
+                setUser(responseData.user);
+                console.log(responseData.user);
                 navigate('/');
 
             }
