@@ -41,7 +41,15 @@ const PendingConnections = () => {
         RejectUser(requesterId, id);
     };
 
-    if (loading) return <p>Loading matches...</p>;
+    // if (loading) return <p>Loading matches...</p>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="w-24 h-24 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                {/* <h1>loading...</h1> */}
+            </div>
+        )
+    }
     return (
         <div className='mx-8 my-10 flex flex-col gap-8'>
             <div className='gap-6 flex flex-col items-center'>
