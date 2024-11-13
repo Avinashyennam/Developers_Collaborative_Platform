@@ -122,4 +122,10 @@ const deleteAcc = async (req, res) => {
         return res.status(500).json({ message: "internal server error at deleting profile" });
     }
 }
-module.exports = { getUsers, updateProfile, deleteAcc, specificUser };
+
+// route to fetch user's profile picture
+const profilePic = async(req, res)=>{
+    console.log(req.user.profilePic)
+    res.json({ profile: req.user.profilePic });
+}
+module.exports = { getUsers, updateProfile, deleteAcc, specificUser, profilePic };

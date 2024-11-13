@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { signup, login } = require("../controllers/auth");
-const { getUsers, updateProfile, deleteAcc, specificUser } = require("../controllers/getUsers");
+const { getUsers, updateProfile, deleteAcc, specificUser, profilePic } = require("../controllers/getUsers");
 const {addProject, getProjects, deleteProject, specificProject} = require("../controllers/projectsController");
 const matches = require("../controllers/matchedUsers");
+const authenticateToken = require("../middlewares/authenticateToken");
 // const uploadImage = require("../controllers/imageUpload");
 const { sendConnRequest, acceptConnRequest, rejectConnRequest, pendingConnRequests, connections } = require("../controllers/connectController");
 
@@ -12,6 +13,7 @@ router.post("/login", login);                           // login route
 router.get("/allusers", getUsers);                      // route to fetch all users
 router.get("/getuser/:id", specificUser);               // route to fetch specific user
 router.put("/updateprofile/:id", updateProfile);        // route to update user profile
+router.get("/getprofile", authenticateToken , profilePic);              // route to fetch profile picture
 router.post("/:id/projects", addProject);               // route to add projects
 router.get("/:id/projects", getProjects);               // route to read projects
 router.delete("/:id/projects/:projectId", deleteProject);   // route to delete specific project

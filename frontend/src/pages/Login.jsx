@@ -57,6 +57,7 @@ const Login = () => {
                 //console.log(responseData);
                 // localStorage.setItem("token", responseData.token);
                 sessionStorage.setItem('token', responseData.token);
+                // sessionStorage.setItem('profile', responseData.users.profilePicture);
                 setIsLogin(true);
                 setUser(responseData.user);
                 console.log(user)
