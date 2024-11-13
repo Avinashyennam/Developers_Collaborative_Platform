@@ -25,7 +25,8 @@ let Navbar = () => {
 
     const handleLogout = () => {
         setIsLogin(false);
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
+        sessionStorage.removeItem('token');
     };
 
     return (
@@ -44,7 +45,7 @@ let Navbar = () => {
                 </div>
                 <div>
                     {
-                        localStorage.getItem("token") ?
+                        sessionStorage.getItem('token') ?
                             <div className=''>
                                 <img
                                     src={user.profilePicture}

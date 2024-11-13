@@ -55,7 +55,8 @@ const Login = () => {
                 console.log("signup Successful");
                 let responseData = await response.json();
                 //console.log(responseData);
-                localStorage.setItem("token", responseData.token);
+                // localStorage.setItem("token", responseData.token);
+                sessionStorage.setItem('token', responseData.token);
                 setIsLogin(true);
                 setUser(responseData.user);
                 console.log(user)
@@ -84,7 +85,8 @@ const Login = () => {
                 console.log("Login successful");
                 let responseData = await response.json();
                 // console.log("response is", responseData);
-                localStorage.setItem("token", responseData.token);
+                // localStorage.setItem("token", responseData.token);
+                sessionStorage.setItem('token', responseData.token);
                 setIsLogin(true);
                 console.log("isLogin after login", isLogin);
                 const userId = responseData.user._id;

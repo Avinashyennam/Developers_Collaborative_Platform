@@ -7,12 +7,12 @@ const DevContextProvider = ({children}) => {
     const [id, setUserId] = useState(null);
     const [user, setUser] = useState(null);
     const [isLogin, setIsLogin] = useState(() => {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         return token && token.length > 0 ? true : false;
     });
 
     useEffect(()=>{
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
