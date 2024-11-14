@@ -54,13 +54,13 @@ const Login = () => {
             if (response.ok) {
                 console.log("signup Successful");
                 let responseData = await response.json();
-                //console.log(responseData);
-                // localStorage.setItem("token", responseData.token);
                 sessionStorage.setItem('token', responseData.token);
-                // sessionStorage.setItem('profile', responseData.users.profilePicture);
                 setIsLogin(true);
+                const userId = responseData.user._id;
+                setUserId(userId);
                 setUser(responseData.user);
-                console.log(user)
+                console.log(responseData.user);
+                navigate('/');
             }
             else {
                 alert("User already exists");

@@ -34,7 +34,7 @@ const specificUser = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         const { name, skills, interests, experienceLevel, bio } = req.body;
-        const { id } = req.params;
+        const id  = req.user._id;
 
         let user = await User.findById(id);
         if (user == null) {
