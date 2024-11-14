@@ -73,15 +73,16 @@ const ProfilePic = () => {
                         {open && (
                             <ul
                                 ref={dropdownRef}
-                                className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded shadow-lg"
+                                className="absolute right-0 mt-2  bg-white border border-gray-300 rounded shadow-lg"
                             >
-                                <li className="w-full px-4 py-2 text-left text-lg text-red-600 hover:bg-gray-100 rounded">Profile</li>
-                                <li><button
+                                <Link to="/profile"><li className="w-full px-4 py-2 text-left text-lg text-red-600 hover:bg-gray-100 rounded">My profile</li></Link>
+                                <Link to="/updateprofile"><li className="w-full px-4 py-2 text-left text-lg text-red-600 hover:bg-gray-100 rounded">Update profile</li></Link>
+                                <Link to="/login"><li><button
                                     onClick={handleLogout}
                                     className="w-full px-4 py-2 text-left text-lg text-red-600 hover:bg-gray-100 rounded"
                                 >
                                     Logout
-                                </button></li>
+                                </button></li></Link>
                             </ul>
                         )}
                     </div>

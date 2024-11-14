@@ -19,7 +19,7 @@ const authenticateToken = async (req, res, next) => {
 
         // Attach user profile to the request object
         req.user = userProfile;
-        console.log("user profile is", userProfile);
+        // console.log("user profile is", userProfile);
         next();
     } catch (error) {
         console.error('Error verifying token:', error);

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { DevContext } from '../context/Context';
+// import { DevContext } from '../context/Context';
 import '../App.css';
 const UpdateProfile = () => {
 
-    const { isLogin } = useContext(DevContext);
+    // const { isLogin } = useContext(DevContext);
     const [name, setName] = useState('');
     const [experienceLevel, setExperienceLevel] = useState('');
     const [bio, setBio] = useState('');
@@ -11,12 +11,6 @@ const UpdateProfile = () => {
     const [inputSkill, setInputSkill] = useState('');
     const [interests, setInterests] = useState([]);
     const [inputInterest, setInputInterest] = useState('');
-
-    // Helper function to handle array inputs
-    // const handleArrayChange = (setter) => (e) => {
-    //     const values = e.target.value.split('/,\s*/').map((item) => item.trim());
-    //     setter(values);
-    // };
 
     const handleSkillAdd = (e) => {
         e.preventDefault();
@@ -35,10 +29,6 @@ const UpdateProfile = () => {
     };
 
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-
-    // useEffect(() => {
-    //     const token = sessionStorage.getItem("token");
-    // }, [isLogin]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -91,9 +81,6 @@ const UpdateProfile = () => {
             <div className="background-container">
                 <div className="content">
                     <h2>Enter Your Details</h2>
-                    {/* <input type="text" placeholder="Name" />
-                    <input type="email" placeholder="Email" />
-                    <button type="submit">Submit</button> */}
 
                     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
                         <label className="block mb-4">
