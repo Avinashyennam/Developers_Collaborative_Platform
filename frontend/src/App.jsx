@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Matches from './pages/Matches';
 import Connections from './pages/Connections';
 import PendingConnections from './pages/PendingConn';
+import UpdateProfile from './pages/UpdateProfile';
 import Login from './pages/Login';
 function App() {
   const [count, setCount] = useState(0)
@@ -21,6 +22,7 @@ function App() {
           <Route path='/connections' element={<Connections />} />
           <Route path='/pendingconnections' element={<PendingConnections />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/updateprofile' element = {<UpdateProfile />} />
         </Routes>
         <Footer />
       </BrowserRouter>
