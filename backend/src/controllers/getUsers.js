@@ -125,7 +125,7 @@ const deleteAcc = async (req, res) => {
 
 // route to fetch user's profile picture
 const profilePic = async(req, res)=>{
-    console.log(req.user.profilePic)
-    res.json({ profile: req.user.profilePic });
+    // console.log(req.user.profilePicture)
+    res.json({ profile: req.user.profilePicture });
 }
 module.exports = { getUsers, updateProfile, deleteAcc, specificUser, profilePic };

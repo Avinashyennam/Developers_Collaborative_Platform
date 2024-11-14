@@ -36,11 +36,11 @@ const ProfilePic = () => {
         if (token) {
             fetchProfileData(token);
         }
-    }, []);
+    }, [isLogin]);
 
-    const fetchProfileData = async () => {
+    const fetchProfileData = async (token) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/users/getprofile/${id}`, {
+            const response = await fetch("http://localhost:5000/api/users/getprofile", {
                 headers: {
                     'token': token,
                 },
