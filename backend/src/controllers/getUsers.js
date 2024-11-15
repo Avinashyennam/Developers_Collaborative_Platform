@@ -18,7 +18,7 @@ const getUsers = async (req, res) => {
 // route for getting specific user
 const specificUser = async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.user._id;
         const user = await User.findById(id).select('-password');
         if (!user) {
             return res.status(404).json({ message: "user not found" });

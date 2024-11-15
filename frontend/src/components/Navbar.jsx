@@ -8,7 +8,7 @@ let Navbar = () => {
     const { isLogin, setIsLogin, user } = useContext(DevContext);
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
-    console.log(isLogin);
+    // console.log(isLogin);
 
     
     useEffect(() => {

@@ -11,7 +11,7 @@ const { sendConnRequest, acceptConnRequest, rejectConnRequest, pendingConnReques
 router.post("/signup", signup);                         // signup route
 router.post("/login", login);                           // login route
 router.get("/allusers", getUsers);                      // route to fetch all users
-router.get("/getuser/:id", specificUser);               // route to fetch specific user
+router.get("/getuser", authenticateToken, specificUser);               // route to fetch specific user
 router.put("/updateprofile", authenticateToken, updateProfile);        // route to update user profile
 router.get("/getprofile", authenticateToken , profilePic);    // route to fetch profile picture
 router.post("/:id/projects", addProject);               // route to add projects

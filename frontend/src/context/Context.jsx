@@ -11,17 +11,41 @@ const DevContextProvider = ({children}) => {
         return token && token.length > 0 ? true : false;
     });
 
+    // useEffect(()=>{
+    //     const token = sessionStorage.getItem('token');
+    //     if (token) {
+    //         try {
+    //             const decodedToken = jwtDecode(token);
+    //             setUserId(decodedToken._id); // Use the correct key based on your token structure
+    //         } catch (error) {
+    //             console.error("Invalid token:", error);
+    //         }
+    //     }
+    // },[])
+
     useEffect(()=>{
-        const token = sessionStorage.getItem('token');
-        if (token) {
+        async function getUser(){
             try {
-                const decodedToken = jwtDecode(token);
-                setUserId(decodedToken._id); // Use the correct key based on your token structure
+                if(sessionStorage.getItem("token")){
+                    const response = await fetch("http://localhost:5000/api/users/getuser",{
+                        method: "GET",
+                        headers: {
+                            token: sessionStorage.getItem("token")
+                        }
+                    })
+
+                    if(response.ok){
+                        const data = await response.json();
+                        // console.log(data);
+                        setUser(data.user);
+                    }
+                }
             } catch (error) {
-                console.error("Invalid token:", error);
+                console.log("error while retriving user details");
             }
         }
-    },[])
+        getUser();
+    },[user]);
 
     // const getUserId = ()=>{
     //     const token = localStorage.getItem('token');

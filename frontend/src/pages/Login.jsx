@@ -58,7 +58,7 @@ const Login = () => {
                 setIsLogin(true);
                 const userId = responseData.user._id;
                 setUserId(userId);
-                setUser(responseData.user);
+                // setUser(responseData.user);
                 console.log(responseData.user);
                 navigate('/');
             }

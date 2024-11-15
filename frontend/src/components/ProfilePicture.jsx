@@ -47,8 +47,8 @@ const ProfilePic = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log("data is", data);
-                console.log("profile is", data.profile);
+                // console.log("data is", data);
+                // console.log("profile is", data.profile);
                 setProfilePic(data.profile);
             }
         } catch (error) {

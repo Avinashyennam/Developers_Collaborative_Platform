@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
-// import { DevContext } from '../context/Context';
 import '../App.css';
 const UpdateProfile = () => {
 
-    // const { isLogin } = useContext(DevContext);
     const [name, setName] = useState('');
     const [experienceLevel, setExperienceLevel] = useState('');
     const [bio, setBio] = useState('');
@@ -14,18 +12,25 @@ const UpdateProfile = () => {
 
     const handleSkillAdd = (e) => {
         e.preventDefault();
-        if (inputSkill.trim() && !skills.includes(inputSkill.trim())) {
-            setSkills([...skills, inputSkill.trim()]);
-            // setInputSkill('');
-        }
+        const newSkills = inputSkill
+            .split(',')
+            .map(skill => skill.trim())
+            .filter(skill => skill && !skills.includes(skill));
+
+        setSkills([...skills, ...newSkills]);
+        alert("Skills added!")
     };
 
     const handleInterestAdd = (e) => {
         e.preventDefault();
-        if (inputInterest.trim() && !interests.includes(inputInterest.trim())) {
-            setInterests([...interests, inputInterest.trim()]);
-            // setInputInterest('');
-        }
+
+        // Split the input by commas, trim whitespace, and filter out duplicates or empty entries
+        const newInterests = inputInterest
+            .split(',')
+            .map(interest => interest.trim()) // Trim each interest
+            .filter(interest => interest && !interests.includes(interest)); // Exclude empty or duplicate interests
+        setInterests([...interests, ...newInterests]);
+        alert("Interests added");
     };
 
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
@@ -37,20 +42,13 @@ const UpdateProfile = () => {
         const formattedSkills = skills.map((skill) => capitalize(skill));
         const formattedInterests = interests.map((interest) => capitalize(interest));
 
-        // const formData = {
-        //     name: formattedName,
-        //     experienceLevel,
-        //     bio,
-        //     skills: formattedSkills,
-        //     interests: formattedInterests,
-        // };
         // Create data object and only include non-empty fields
         const formData = {
             ...(name && { name: formattedName }),
             ...(experienceLevel && { experienceLevel: experienceLevel.trim() }),
             ...(bio && { bio: bio.trim() }),
-            ...(formattedSkills.length > 0 && { formattedSkills }),
-            ...(formattedInterests.length > 0 && { formattedInterests }),
+            ...(formattedSkills.length > 0 && { skills: formattedSkills }),
+            ...(formattedInterests.length > 0 && { interests: formattedInterests }),
         };
 
         console.log("form data is", formData);
@@ -90,7 +88,7 @@ const UpdateProfile = () => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
-                                required
+
                             />
                         </label>
 
@@ -101,7 +99,7 @@ const UpdateProfile = () => {
                                 value={experienceLevel}
                                 onChange={(e) => setExperienceLevel(e.target.value)}
                                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
-                                required
+
                             />
                         </label>
 
@@ -111,7 +109,6 @@ const UpdateProfile = () => {
                                 value={bio}
                                 onChange={(e) => setBio(e.target.value)}
                                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
-                                required
                             />
                         </label>
 
