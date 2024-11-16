@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DevContext } from '../context/Context';
-// import connectUser from '../components/connectUser'
 import AcceptUser from '../components/Accept';
 import RejectUser from '../components/Reject';
 const PendingConnections = () => {
@@ -10,21 +9,24 @@ const PendingConnections = () => {
 
     useEffect(() => {
         const fetchPendingConn = async () => {
-            if (!id) {
-                console.log("User ID is not set yet.");
-                return; // Exit if id is null
-            }
+            const token = sessionStorage.getItem('token');
+            if (!token) {
+                console.log("Token not found in session storage.");
+                return; // Exit if token is not found
+            }  
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/users/pendingrequests/${id}`);
+                const response = await fetch(`http://localhost:5000/api/users/pendingrequests`,{
+                    headers: {
+                        token: sessionStorage.getItem("token")
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch matches');
                 }
 
                 const data = await response.json();
-                // console.log(data);
                 setPendingConn(data);
-                // console.log(connections);
             } catch (error) {
                 console.log("failed to fetch users..");
             } finally {
@@ -32,7 +34,7 @@ const PendingConnections = () => {
             }
         }
         fetchPendingConn();
-    }, [id]);
+    }, []);
 
     const handleAccept = (requesterId) => {
         AcceptUser(requesterId, id);
@@ -41,7 +43,6 @@ const PendingConnections = () => {
         RejectUser(requesterId, id);
     };
 
-    // if (loading) return <p>Loading matches...</p>;
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -54,7 +55,6 @@ const PendingConnections = () => {
         <div className='mx-8 my-10 flex flex-col gap-8'>
             <div className='gap-6 flex flex-col items-center'>
                 <h1 className='text-4xl'>"🚀 Explore Opportunities: Review Your Pending Connections!"</h1>
-                {/* <p className='text-2xl'>Explore developers who share your skills, interests, and experience level. Connect, collaborate, and turn ideas into reality with partners perfectly matched to you.</p> */}
             </div>
 
             <div className='flex flex-col items-center gap-10'>
@@ -93,18 +93,6 @@ const PendingConnections = () => {
                         ))
                     }
                 </ul>
-                {/* <ul>
-                    {
-                        pendingConn.map((match) => (
-                            <li key={match.from._id}>
-                                <h3>{match.from.name}</h3>
-                                <p><strong>Email:</strong> {match.from.email}</p>
-                                <p><strong>Skills:</strong> {match.from.skills.join(', ')}</p>
-                                <p><strong>Requested At:</strong> {new Date(match.requestedAt).toLocaleString()}</p>
-                            </li>
-                        ))
-                    }
-                </ul> */}
             </div>
         </div>
     )

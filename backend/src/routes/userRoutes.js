@@ -5,7 +5,6 @@ const { getUsers, updateProfile, deleteAcc, specificUser, profilePic } = require
 const {addProject, getProjects, deleteProject, specificProject} = require("../controllers/projectsController");
 const matches = require("../controllers/matchedUsers");
 const authenticateToken = require("../middlewares/authenticateToken");
-// const uploadImage = require("../controllers/imageUpload");
 const { sendConnRequest, acceptConnRequest, rejectConnRequest, pendingConnRequests, connections } = require("../controllers/connectController");
 
 router.post("/signup", signup);                         // signup route
@@ -18,12 +17,12 @@ router.post("/:id/projects", addProject);               // route to add projects
 router.get("/:id/projects", getProjects);               // route to read projects
 router.delete("/:id/projects/:projectId", deleteProject);   // route to delete specific project
 router.get("/:userId/projects/:projectId", specificProject)     // route to fetch specific project
-router.get("/matchusers/:id", matches);              // route to match users and calculate the matching score
+router.get("/matchusers", authenticateToken, matches);              // route to match users and calculate the matching score
 router.delete("/deleteaccount/:id", deleteAcc);             // route to delete user account
 router.post("/connect", sendConnRequest);               // route to send connection request
 router.post("/accept", acceptConnRequest);              // route to accept connection request
 router.post("/reject", rejectConnRequest);              // route to reject connection request
-router.get("/pendingrequests/:id", pendingConnRequests)    // route to check pending connection reqs
-router.get("/connections/:id", connections);                // route to fetch connections of user
+router.get("/pendingrequests", authenticateToken, pendingConnRequests)    // route to check pending connection reqs
+router.get("/connections", authenticateToken, connections);                // route to fetch connections of user
 // router.post("/uploadimage",upload.single('image'), uploadImage);
 module.exports = router;

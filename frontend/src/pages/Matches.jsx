@@ -9,34 +9,67 @@ const Matches = () => {
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const { id } = useContext(DevContext);
-    console.log("Current ID:", id);
+    // console.log("Current ID:", id);
 
+
+    // useEffect(() => {
+    //     const fetchMatches = async () => {
+    //         if (!id) {
+    //             console.log("User ID is not set yet.");
+    //             return; // Exit if id is null
+    //         }
+    //         try {
+    //             setLoading(true);
+    //             const response = await fetch(`http://localhost:5000/api/users/matchusers/${id}`);
+    //             if (!response.ok) {
+    //                 throw new Error('Failed to fetch matches');
+    //             }
+
+    //             const data = await response.json();
+    //             console.log(data);
+    //             setMatches(data);
+    //             console.log(matches);
+    //         } catch (error) {
+    //             console.log("failed to fetch users..");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+    //     fetchMatches();
+    // }, [id])
 
     useEffect(() => {
         const fetchMatches = async () => {
-            if (!id) {
-                console.log("User ID is not set yet.");
-                return; // Exit if id is null
-            }
+            const token = sessionStorage.getItem('token');
+            if (!token) {
+                console.log("Token not found in session storage.");
+                return; // Exit if token is not found
+            }     
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/users/matchusers/${id}`);
+                const response = await fetch(`http://localhost:5000/api/users/matchusers`, {
+                    headers: {
+                        token: sessionStorage.getItem('token'), // Include token in the headers for authorization if required
+                    },
+                });
+    
                 if (!response.ok) {
                     throw new Error('Failed to fetch matches');
                 }
-
+    
                 const data = await response.json();
                 console.log(data);
                 setMatches(data);
-                console.log(matches);
             } catch (error) {
-                console.log("failed to fetch users..");
+                console.error("Failed to fetch users:", error);
             } finally {
                 setLoading(false);
             }
-        }
+        };
+    
         fetchMatches();
-    }, [id])
+    },[]); // Include `id` in the dependency array
+    
 
     const handleConnect = (recipientId) => {
         connectUser(recipientId, id);
@@ -165,8 +198,9 @@ const Matches = () => {
                                             transition={{ duration: 1 }}
                                             key={match._id}
                                             onClick={() => handleUserClick(match)}
+                                            className='h-24 w-24 rounded-full overflow-hidden'
                                         >
-                                            <img src={match.profilePicture} alt="not found" width={100} height={100} className='rounded-full shadow-2xl shadow-indigo-500/50' />
+                                            <img src={match.profilePicture} alt="not found" className='shadow-2xl shadow-indigo-500/50 w-full h-full object-cover' />
                                         </motion.div>
                                     )
                                 })

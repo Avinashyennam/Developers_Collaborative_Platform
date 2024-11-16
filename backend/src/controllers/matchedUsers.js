@@ -2,7 +2,7 @@ const User = require("../models/user");
 
 const matches = async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.user._id;
         const user = await User.findById(id).populate({
             path: 'matches',
             select: 'name email skills interests experienceLevel profilePicture'

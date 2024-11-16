@@ -127,7 +127,7 @@ const rejectConnRequest = async (req, res) => {
 // route for checking pending connection requests from users
 const pendingConnRequests = async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.user._id;
 
         // Find the user by ID and populate the details of the users who sent the requests
         let user = await User.findById(id).populate({
@@ -150,7 +150,7 @@ const pendingConnRequests = async (req, res) => {
 // route for retriving connections of a user
 const connections = async (req, res) =>{
     try {
-        const {id} = req.params;
+        const id = req.user._id;
 
         let user = await User.findById(id).populate({
             path: 'connections',

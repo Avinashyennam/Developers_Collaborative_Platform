@@ -37,6 +37,7 @@ const getProjects = async (req, res) => {
             return res.status(404).json({ message: "user not found" });
         }
         res.status(200).json({ projects: user.projects });
+        // res.status(200).json({ projects: [...user.projects].reverse() });
     } catch (error) {
         console.log("Error while reading projects", error);
         res.status(500).json({ message: "Internal server error at reading projects" });

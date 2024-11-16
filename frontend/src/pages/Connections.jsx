@@ -8,13 +8,18 @@ const Connections = () => {
 
     useEffect(() => {
         const fetchConnections = async () => {
-            if (!id) {
-                console.log("User ID is not set yet.");
-                return; // Exit if id is null
-            }
+            const token = sessionStorage.getItem('token');
+            if (!token) {
+                console.log("Token not found in session storage.");
+                return; // Exit if token is not found
+            }  
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5000/api/users/connections/${id}`);
+                const response = await fetch(`http://localhost:5000/api/users/connections`,{
+                    headers: {
+                        token: sessionStorage.getItem("token")
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch matches');
                 }
@@ -22,7 +27,7 @@ const Connections = () => {
                 const data = await response.json();
                 console.log(data);
                 setConnections(data);
-                console.log(connections);
+                // console.log(connections);
             } catch (error) {
                 console.log("failed to fetch users..");
             } finally {
@@ -30,7 +35,7 @@ const Connections = () => {
             }
         }
         fetchConnections();
-    }, [id]);
+    }, []);
 
     // if (loading) return <p>Loading matches...</p>;
     if (loading) {
