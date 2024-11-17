@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
-import * as jwtDecode from 'jwt-decode';
+// import * as jwtDecode from 'jwt-decode';
 export const DevContext = createContext(null);
 
-const DevContextProvider = ({children}) => {
+const DevContextProvider = ({ children }) => {
 
     const [id, setUserId] = useState(null);
     const [user, setUser] = useState(null);
@@ -11,30 +11,18 @@ const DevContextProvider = ({children}) => {
         return token && token.length > 0 ? true : false;
     });
 
-    // useEffect(()=>{
-    //     const token = sessionStorage.getItem('token');
-    //     if (token) {
-    //         try {
-    //             const decodedToken = jwtDecode(token);
-    //             setUserId(decodedToken._id); // Use the correct key based on your token structure
-    //         } catch (error) {
-    //             console.error("Invalid token:", error);
-    //         }
-    //     }
-    // },[])
-
-    useEffect(()=>{
-        async function getUser(){
+    useEffect(() => {
+        async function getUser() {
             try {
-                if(sessionStorage.getItem("token")){
-                    const response = await fetch("http://localhost:5000/api/users/getuser",{
+                if (sessionStorage.getItem("token")) {
+                    const response = await fetch("http://localhost:5000/api/users/getuser", {
                         method: "GET",
                         headers: {
                             token: sessionStorage.getItem("token")
                         }
                     })
 
-                    if(response.ok){
+                    if (response.ok) {
                         const data = await response.json();
                         // console.log(data);
                         setUser(data.user);
@@ -45,7 +33,22 @@ const DevContextProvider = ({children}) => {
             }
         }
         getUser();
-    },[user]);
+    }, []);
+
+    // Save user data to sessionStorage and load from it on refresh
+    useEffect(() => {
+        if (user) {
+            sessionStorage.setItem("user", JSON.stringify(user));
+        }
+    }, [user]);
+
+    useEffect(() => {
+        const savedUser = sessionStorage.getItem("user");
+        if (savedUser) {
+            setUser(JSON.parse(savedUser)); // Restore user state from sessionStorage
+            // setLoading(false);
+        }
+    }, []);
 
     // const getUserId = ()=>{
     //     const token = localStorage.getItem('token');

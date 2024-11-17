@@ -11,6 +11,8 @@ const Profile = () => {
 
     const { user, setUser } = useContext(DevContext);
     const [showModal, setShowModal] = useState(false);
+    const [imageModal, setImageModal] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [projectData, setProjectData] = useState({
         title: "",
         description: "",
@@ -70,7 +72,43 @@ const Profile = () => {
         } catch (error) {
             console.error("error is", error);
         }
-    }
+    };
+
+    const handleImageUpload = async (e) => {
+        e.preventDefault();
+
+        if (!selectedImage) {
+            toast.error('Please select an image to upload.', { position: 'top-center' });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", selectedImage);
+
+        try {
+            const response = await fetch(`http://localhost:5000/upload`, {
+                method: "POST",
+                headers: {
+                    token: sessionStorage.getItem("token"),
+                },
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                toast.success('Profile picture updated successfully!', { position: 'top-center' });
+
+                // Update the user profile picture in context
+                setUser({ ...user, profilePicture: data.imageUrl });
+                setImageModal(false);
+            } else {
+                const errorData = await response.json();
+                toast.error(`Error: ${errorData.message}`, { position: 'top-center' });
+            }
+        } catch (error) {
+            toast.error('Failed to upload image. Please try again later.', { position: 'top-center' });
+        }
+    };
 
     // console.log(user);
 
@@ -87,12 +125,30 @@ const Profile = () => {
                         <div className="bg-gradient-to-r from-yellow-300 to-pink-300 h-28 rounded-t-lg relative">
                             {/* Profile Picture */}
                             <div className="absolute left-24 transform -translate-x-1/2 -bottom-12 w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md">
-                                <img
-                                    // src="/Kat Graham.jpeg" // replace with actual image URL
-                                    src={user.profilePicture}
-                                    alt="Profile"
-                                    className="w-full h-full object-cover"
-                                />
+                                {
+                                    user.profilePicture ?
+                                        <img
+                                            src={user.profilePicture}
+                                            alt="Profile"
+                                            className="w-full h-full object-cover"
+                                        /> :
+                                        <div
+                                            className='flex items-center justify-center w-full h-full rounded-full bg-gray-200 text-black text-xl font-bold border border-gray-200'
+                                            onClick={() => setOpen(!open)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            {(user.name[0].toUpperCase() || '?')}
+                                        </div>
+                                }
+                                {/* Hover Effect
+                                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <button
+                                        onClick={() => setImageModal(true)}
+                                        className="bg-blue-500 text-white px-3 py-1 rounded-full"
+                                    >
+                                        Change Picture
+                                    </button>
+                                </div> */}
                             </div>
                         </div>
 
@@ -103,6 +159,12 @@ const Profile = () => {
                                 <p>{user.bio}</p> :
                                 <p>Passionate Software Developer</p>
                             }
+                            {/* <button
+                                onClick={() => setImageModal(true)}
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                            >
+                                Update Profile Picture
+                            </button> */}
                             <h3>Experience level: {user.experienceLevel}</h3>
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-600 flex gap-1 items-center">
@@ -117,18 +179,16 @@ const Profile = () => {
                                 <span> </span>
                                 <span className="text-gray-500">Full-time</span>
                             </div>
-                            {/* <p className="text-gray-600">Lead product designer at Google</p>
-                        <p className="text-gray-500 text-sm">{user.email} · Full-time</p> */}
                             <ul>
                                 <li>matches: {user.matches.length}</li>
                                 <li>connections: {user.connections.length}</li>
                                 <li>pending connections: {user.pendingConnections.length}</li>
                             </ul>
                             <div className="mt-4 flex justify-center gap-4">
-                                {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Message</button> */}
-                                <button className="bg-green-600 text-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg">Share profile</button>
+                                <button onClick={() => setImageModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-lg">Update Picture</button>
                                 <button onClick={deleteAccount} className="bg-rose-600 text-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg">Delete account</button>
                             </div>
+
                         </div>
                     </div>
 
@@ -140,41 +200,41 @@ const Profile = () => {
                             {user.skills.length == 0 ?
                                 <div>
                                     <Link to="/updateprofile">
-                                    <span className="text-blue-600">Click here to add skills</span>
+                                        <span className="text-blue-600">Click here to add skills</span>
                                     </Link>
                                 </div> :
                                 <div className="flex flex-wrap gap-2 mt-2">
-                                {
-                                    user.skills.map((skill) => (
-                                        <span key={skill.id} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
-                                            {skill}
-                                        </span>
-                                    ))
-                                }
-                            </div>
+                                    {
+                                        user.skills.map((skill) => (
+                                            <span key={skill.id} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
+                                                {skill}
+                                            </span>
+                                        ))
+                                    }
+                                </div>
                             }
-                            
+
                         </div>
                         <div>
                             <h3 className="text-gray-700 font-semibold">Interests</h3>
                             {
-                                user.interests.length == 0?
-                                <div>
-                                    <Link to="/updateprofile">
-                                    <span className="text-blue-600">Click here to add interests</span>
-                                    </Link>
-                                </div>:
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                {
-                                    user.interests.map((interest) => (
-                                        <span key={interest.id} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
-                                            {interest}
-                                        </span>
-                                    ))
-                                }
-                            </div>
+                                user.interests.length == 0 ?
+                                    <div>
+                                        <Link to="/updateprofile">
+                                            <span className="text-blue-600">Click here to add interests</span>
+                                        </Link>
+                                    </div> :
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {
+                                            user.interests.map((interest) => (
+                                                <span key={interest.id} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
+                                                    {interest}
+                                                </span>
+                                            ))
+                                        }
+                                    </div>
                             }
-                            
+
                         </div>
                     </div>
                 </div>
@@ -270,6 +330,50 @@ const Profile = () => {
                     </div>
                 </div>
             )};
+
+            {/* Modal for Image Upload */}
+            {imageModal && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-semibold">Upload Profile Picture</h3>
+                            <button
+                                className="text-gray-600"
+                                onClick={() => setImageModal(false)}
+                            >
+                                ✖
+                            </button>
+                        </div>
+                        <form onSubmit={handleImageUpload}>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Select an Image
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setSelectedImage(e.target.files[0])}
+                                    className="mt-1 block w-full"
+                                    required
+                                />
+                            </div>
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setImageModal(false)}
+                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg"
+                                >
+                                    Cancel
+                                </button>
+                                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                                    Upload
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            <ToastContainer />
 
         </div>
     );

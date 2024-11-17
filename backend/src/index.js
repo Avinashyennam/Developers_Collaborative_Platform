@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 dotenv.config();
+const authenticateToken = require("./middlewares/authenticateToken.js");
 const user = require("./routes/userRoutes.js");
 const mongouri = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5001;
@@ -22,19 +23,6 @@ const fs = require('fs');
 const User = require("./models/user.js");
 // const uploadImage = require("./controllers/imageUpload.js");
 
-// Multer setup to store files temporarily
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Folder for temporary storage
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname); // File naming convention
-    }
-});
-
-// Multer middleware to handle file uploads
-const upload = multer({ storage: storage });
-
 app.use(express.json());
 mongoose.connect(mongouri)
     .then(() => {
@@ -48,9 +36,21 @@ app.get("/", (req, res) => {
     res.send("Hi");
 });
 
-app.post('/upload/:id', upload.single('image'), (req, res) => {
+// Multer setup to store files temporarily
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Folder for temporary storage
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname); // File naming convention
+    }
+});
+
+// Multer middleware to handle file uploads
+const upload = multer({ storage: storage });
+app.post('/upload', authenticateToken, upload.single('image'), (req, res) => {
     const filePath = req.file.path; // Get file path after multer stores it
-    const { id } = req.params;
+    const id = req.user._id;
     // Upload image to Cloudinary
     cloudinary.uploader.upload(filePath, { folder: 'uploads' }, async (error, result) => {
         if (error) {

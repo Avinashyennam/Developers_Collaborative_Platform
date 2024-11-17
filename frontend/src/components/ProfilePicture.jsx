@@ -59,7 +59,7 @@ const ProfilePic = () => {
                     <div>
                         {profilePic ? (
                             <img
-                                src={profilePic}
+                                src={user.profilePicture}
                                 alt='Avatar'
                                 width={50}
                                 height={50}
