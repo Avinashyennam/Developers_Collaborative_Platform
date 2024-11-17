@@ -13,16 +13,17 @@ router.get("/allusers", getUsers);                      // route to fetch all us
 router.get("/getuser", authenticateToken, specificUser);               // route to fetch specific user
 router.put("/updateprofile", authenticateToken, updateProfile);        // route to update user profile
 router.get("/getprofile", authenticateToken , profilePic);    // route to fetch profile picture
-router.post("/:id/projects", addProject);               // route to add projects
-router.get("/:id/projects", getProjects);               // route to read projects
+router.post("/addproject", authenticateToken, addProject);               // route to add projects
+router.get("/getprojects", authenticateToken, getProjects);               // route to read projects
 router.delete("/:id/projects/:projectId", deleteProject);   // route to delete specific project
 router.get("/:userId/projects/:projectId", specificProject)     // route to fetch specific project
 router.get("/matchusers", authenticateToken, matches);              // route to match users and calculate the matching score
-router.delete("/deleteaccount/:id", deleteAcc);             // route to delete user account
+router.delete("/deleteaccount", authenticateToken, deleteAcc);             // route to delete user account
 router.post("/connect", sendConnRequest);               // route to send connection request
 router.post("/accept", acceptConnRequest);              // route to accept connection request
 router.post("/reject", rejectConnRequest);              // route to reject connection request
 router.get("/pendingrequests", authenticateToken, pendingConnRequests)    // route to check pending connection reqs
 router.get("/connections", authenticateToken, connections);                // route to fetch connections of user
 // router.post("/uploadimage",upload.single('image'), uploadImage);
+
 module.exports = router;

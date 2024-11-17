@@ -3,7 +3,8 @@ const User = require("../models/user");
 // route to add a project
 const addProject = async (req, res) => {
     try {
-        const { id } = req.params;
+        // const { id } = req.params;
+        const id = req.user._id;
         const { title, description, githubLink } = req.body;
 
         const user = await User.findByIdAndUpdate(
@@ -30,7 +31,8 @@ const addProject = async (req, res) => {
 // route to read the available projects
 const getProjects = async (req, res) => {
     try {
-        const { id } = req.params;
+        // const { id } = req.params;
+        const id = req.user._id;
         const user = await User.findById(id, "projects");
 
         if (!user) {

@@ -107,7 +107,7 @@ function calculateMatchScore(user1, user2) {
 // route for deleting users account
 const deleteAcc = async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.user._id;
 
         // check if user exist or not
         let user = await User.findById(id);

@@ -1,36 +1,87 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import { DevContext } from "../context/Context";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
-import { faBuilding, faEnvelope } from '@fortawesome/free-regular-svg-icons'
+import { faArrowUpRightFromSquare, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Profile = () => {
 
-    const { user } = useContext(DevContext);
+    const { user, setUser } = useContext(DevContext);
+    const [showModal, setShowModal] = useState(false);
+    const [projectData, setProjectData] = useState({
+        title: "",
+        description: "",
+        githubLink: ""
+    });
+
+    const handleAddProject = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:5000/api/users/addproject", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: sessionStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    // userId: user.id, // Add user ID if required
+                    ...projectData
+                }),
+            });
+
+            if (response.ok) {
+                // const newProject = await response.json();
+                // console.log("Project added:", newProject);
+                // // Optionally update the UI or fetch updated project list
+                // user.projects.push(newProject); // Temporary update
+                // setProjectData({ title: "", description: "", githubLink: "" }); // Reset form
+
+                toast.success('Project added successfully!', { position: 'top-center' });
+                setProjectData({ title: '', description: '', githubLink: '' });
+                setShowModal(false);
+            } else {
+                // console.error("Failed to add project");
+                const errorData = await response.json();
+                toast.error(`Error: ${errorData.message}`, { position: 'top-center' });
+            }
+        } catch (error) {
+            toast.error('Failed to add project. Please try again later.', { position: 'top-center' });
+        }
+    };
+
+    const deleteAccount = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:5000/api/users/deleteaccount", {
+                method: "DELETE",
+                headers: {
+                    token: sessionStorage.getItem("token")
+                }
+            });
+            if (response.ok) {
+                setUser(null);
+                sessionStorage.removeItem("token");
+                const navigate = useNavigate();
+                navigate('/');
+            }
+        } catch (error) {
+            console.error("error is", error);
+        }
+    }
+
     // console.log(user);
 
-    const [matchesCount, setMatchesCount] = useState(0);
-    const [connectionsCount, setConnectionsCount] = useState(0);
-    const [pendingCount, setPendingCount] = useState(0);
-
-    useEffect(() => {
-        function count() {
-            if (user) {
-                setMatchesCount(user.matches.length);
-                setConnectionsCount(user.connections.length);
-                setPendingCount(user.pendingConnections.length);
-            }
-        }
-        count();
-    }, [user]);
-
-    if (!user || !user.profilePicture) {
+    if (!user) {
         return <p>Loading profile...</p>;
     }
 
     return (
         <div>
             <div className="bg-gray-100 min-h-screen px-36 py-16 flex  gap-4 justify-center">
-                <div className="w-3/5">
+                <div className="w-3/5 flex flex-col gap-2">
                     <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg">
                         {/* Top Colored Section */}
                         <div className="bg-gradient-to-r from-yellow-300 to-pink-300 h-28 rounded-t-lg relative">
@@ -69,13 +120,14 @@ const Profile = () => {
                             {/* <p className="text-gray-600">Lead product designer at Google</p>
                         <p className="text-gray-500 text-sm">{user.email} · Full-time</p> */}
                             <ul>
-                                <li>matches: {matchesCount}</li>
-                                <li>connections: {connectionsCount}</li>
-                                <li>pending connections: {pendingCount}</li>
+                                <li>matches: {user.matches.length}</li>
+                                <li>connections: {user.connections.length}</li>
+                                <li>pending connections: {user.pendingConnections.length}</li>
                             </ul>
                             <div className="mt-4 flex justify-center gap-4">
                                 {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Message</button> */}
-                                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg">Share profile</button>
+                                <button className="bg-green-600 text-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg">Share profile</button>
+                                <button onClick={deleteAccount} className="bg-rose-600 text-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg">Delete account</button>
                             </div>
                         </div>
                     </div>
@@ -85,7 +137,13 @@ const Profile = () => {
                     <div className="px-6 py-4 w-full max-w-3xl bg-white rounded-lg shadow-lg flex flex-col gap-10">
                         <div>
                             <h3 className="text-gray-700 font-semibold">Skills</h3>
-                            <div className="flex flex-wrap gap-2 mt-2">
+                            {user.skills.length == 0 ?
+                                <div>
+                                    <Link to="/updateprofile">
+                                    <span className="text-blue-600">Click here to add skills</span>
+                                    </Link>
+                                </div> :
+                                <div className="flex flex-wrap gap-2 mt-2">
                                 {
                                     user.skills.map((skill) => (
                                         <span key={skill.id} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
@@ -94,10 +152,19 @@ const Profile = () => {
                                     ))
                                 }
                             </div>
+                            }
+                            
                         </div>
                         <div>
                             <h3 className="text-gray-700 font-semibold">Interests</h3>
-                            <div className="flex flex-wrap gap-2 mt-2">
+                            {
+                                user.interests.length == 0?
+                                <div>
+                                    <Link to="/updateprofile">
+                                    <span className="text-blue-600">Click here to add interests</span>
+                                    </Link>
+                                </div>:
+                                <div className="flex flex-wrap gap-2 mt-2">
                                 {
                                     user.interests.map((interest) => (
                                         <span key={interest.id} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
@@ -106,6 +173,8 @@ const Profile = () => {
                                     ))
                                 }
                             </div>
+                            }
+                            
                         </div>
                     </div>
                 </div>
@@ -129,7 +198,7 @@ const Profile = () => {
                                         className="text-blue-500 mt-2 inline-block flex gap-2 items-center"
                                     >
                                         <span className="hover:underline">View Project</span>
-                                        <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm"/>
+                                        <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm" />
                                     </a>
                                 )}
                             </div>
@@ -137,12 +206,73 @@ const Profile = () => {
                     ) : (
                         <p className="text-gray-500">No projects to display.</p>
                     )}
-                </div>
 
+                    <button onClick={() => setShowModal(true)} className="border p-2 border-gray-500 rounded-lg hover:bg-gray-100">Add more </button>
+                </div>
+                <ToastContainer />
             </div>
 
+            {/* Modal for Adding Project */}
+            {showModal && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-semibold">Add Project</h3>
+                            <FontAwesomeIcon
+                                icon={faTimes}
+                                className="cursor-pointer"
+                                onClick={() => setShowModal(false)}
+                            />
+                        </div>
+                        <form onSubmit={handleAddProject}>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Title</label>
+                                <input
+                                    type="text"
+                                    value={projectData.title}
+                                    onChange={(e) => setProjectData({ ...projectData, title: e.target.value })}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea
+                                    value={projectData.description}
+                                    onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">GitHub Link</label>
+                                <input
+                                    type="url"
+                                    value={projectData.githubLink}
+                                    onChange={(e) => setProjectData({ ...projectData, githubLink: e.target.value })}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                                    required
+                                />
+                            </div>
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg"
+                                >
+                                    Cancel
+                                </button>
+                                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                                    Add Project
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )};
+
         </div>
-    )
-}
+    );
+};
 
 export default Profile;

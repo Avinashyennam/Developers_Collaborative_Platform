@@ -4,11 +4,11 @@ import { DevContext } from '../context/Context';
 const Login = () => {
     const [viewlogin, setLogin] = useState(true);
     const { isLogin, setIsLogin, sap, id, setUserId, setUser, user } = useContext(DevContext);
-    console.log("sap is", sap);
-    console.log(setUserId);
+    // console.log("sap is", sap);
+    // console.log(setUserId);
     // setUserId(1);
-    console.log(id);
-    console.log("isLogin before login", isLogin);
+    // console.log(id);
+    // console.log("isLogin before login", isLogin);
     // const { setUserId } = useState(DevContext);
     const navigate = useNavigate();
     // const {isLogin, setIsLogin} = useContext(ShopContext);
