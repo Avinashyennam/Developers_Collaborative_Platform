@@ -57,7 +57,7 @@ const ProfilePic = () => {
             {
                 sessionStorage.getItem('token') ? (
                     <div>
-                        {profilePic ? (
+                        {user?.profilePicture ? (
                             <img
                                 src={user.profilePicture}
                                 alt='Avatar'

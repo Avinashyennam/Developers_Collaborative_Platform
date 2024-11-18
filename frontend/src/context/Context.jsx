@@ -33,7 +33,7 @@ const DevContextProvider = ({ children }) => {
             }
         }
         getUser();
-    }, []);
+    },[]);
 
     // Save user data to sessionStorage and load from it on refresh
     useEffect(() => {

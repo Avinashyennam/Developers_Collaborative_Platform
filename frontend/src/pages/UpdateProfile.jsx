@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { DevContext } from '../context/Context';
 import '../App.css';
 const UpdateProfile = () => {
 
@@ -9,6 +10,8 @@ const UpdateProfile = () => {
     const [inputSkill, setInputSkill] = useState('');
     const [interests, setInterests] = useState([]);
     const [inputInterest, setInputInterest] = useState('');
+    const {user, setUser} = useContext(DevContext);
+
 
     const handleSkillAdd = (e) => {
         e.preventDefault();
@@ -65,6 +68,9 @@ const UpdateProfile = () => {
 
             if (response.ok) {
                 alert('Profile submitted successfully!');
+                const data = await response.json();
+                console.log(data);
+                setUser(data.user);
             } else {
                 alert('Failed to submit profile.');
             }

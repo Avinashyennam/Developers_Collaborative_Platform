@@ -86,7 +86,7 @@ const Profile = () => {
         formData.append("image", selectedImage);
 
         try {
-            const response = await fetch(`http://localhost:5000/upload`, {
+            const response = await fetch(`http://localhost:5000/upload/${user._id}`, {
                 method: "POST",
                 headers: {
                     token: sessionStorage.getItem("token"),
@@ -99,7 +99,8 @@ const Profile = () => {
                 toast.success('Profile picture updated successfully!', { position: 'top-center' });
 
                 // Update the user profile picture in context
-                setUser({ ...user, profilePicture: data.imageUrl });
+                console.log(data);
+                setUser({ ...user, profilePicture: data.profilePicture });
                 setImageModal(false);
             } else {
                 const errorData = await response.json();
@@ -137,7 +138,7 @@ const Profile = () => {
                                             onClick={() => setOpen(!open)}
                                             style={{ cursor: 'pointer' }}
                                         >
-                                            {(user.name[0].toUpperCase() || '?')}
+                                            {(user?.name?.[0]?.toUpperCase() || '?')}
                                         </div>
                                 }
                                 {/* Hover Effect
@@ -269,7 +270,7 @@ const Profile = () => {
 
                     <button onClick={() => setShowModal(true)} className="border p-2 border-gray-500 rounded-lg hover:bg-gray-100">Add more </button>
                 </div>
-                <ToastContainer />
+                {/* <ToastContainer /> */}
             </div>
 
             {/* Modal for Adding Project */}

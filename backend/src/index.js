@@ -48,35 +48,77 @@ const storage = multer.diskStorage({
 
 // Multer middleware to handle file uploads
 const upload = multer({ storage: storage });
-app.post('/upload', authenticateToken, upload.single('image'), (req, res) => {
-    const filePath = req.file.path; // Get file path after multer stores it
-    const id = req.user._id;
-    // Upload image to Cloudinary
-    cloudinary.uploader.upload(filePath, { folder: 'uploads' }, async (error, result) => {
-        if (error) {
-            return res.status(500).json({ message: 'Cloudinary upload failed', error });
+// app.post('/upload', authenticateToken, upload.single('image'), (req, res) => {
+//     const filePath = req.file.path; // Get file path after multer stores it
+//     const id = req.user._id;
+//     // Upload image to Cloudinary
+//     cloudinary.uploader.upload(filePath, { folder: 'uploads' }, async (error, result) => {
+//         if (error) {
+//             return res.status(500).json({ message: 'Cloudinary upload failed', error });
+//         }
+
+//         // Delete the temporary file after upload
+//         fs.unlinkSync(filePath);
+
+//         try {
+//             // Find the user by userId and update their profilePicture with the Cloudinary URL
+//             const user = await User.findByIdAndUpdate(
+//                 id,                          // Find user by userId
+//                 { profilePicture: result.secure_url },  // Update profilePicture field with Cloudinary URL
+//                 { new: true }                    // Return the updated document
+//             );
+
+//             if (!user) {
+//                 return res.status(404).json({ message: 'User not found' });
+//             }
+//             await user.save();
+//             res.status(200).json({ message: 'Profile picture updated successfully', user });
+//         } catch (err) {
+//             res.status(500).json({ message: 'Failed to update profile picture', err });
+//         }
+//     });
+// });
+
+app.post('/upload/:id', upload.single('image'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    try {
+        const filePath = req.file.path;
+        const {id} = req.params;
+
+        // Limit file size and type
+        const result = await cloudinary.uploader.upload(filePath, { 
+            folder: 'uploads',
+            max_file_size: 5000000, // 5MB limit
+            allowed_formats: ['jpg', 'png', 'jpeg']
+        });
+        
+        // Use promise-based file deletion
+        await fs.promises.unlink(filePath);
+
+        const user = await User.findByIdAndUpdate(
+            id, 
+            { profilePicture: result.secure_url },
+            { new: true, runValidators: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
 
-        // Delete the temporary file after upload
-        fs.unlinkSync(filePath);
-
-        try {
-            // Find the user by userId and update their profilePicture with the Cloudinary URL
-            const user = await User.findByIdAndUpdate(
-                id,                          // Find user by userId
-                { profilePicture: result.secure_url },  // Update profilePicture field with Cloudinary URL
-                { new: true }                    // Return the updated document
-            );
-
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            await user.save();
-            res.status(200).json({ message: 'Profile picture updated successfully', user });
-        } catch (err) {
-            res.status(500).json({ message: 'Failed to update profile picture', err });
-        }
-    });
+        res.status(200).json({ 
+            message: 'Profile picture updated successfully', 
+            profilePicture: result.secure_url 
+        });
+    } catch (err) {
+        console.error('Upload error:', err);
+        res.status(500).json({ 
+            message: 'Upload failed', 
+            error: err.message 
+        });
+    }
 });
 
 
