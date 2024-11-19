@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { DevContext } from '../context/Context';
@@ -73,7 +73,7 @@ const UpdateProfile = () => {
             });
 
             if (response.ok) {
-                alert('Profile submitted successfully!');
+                // alert('Profile submitted successfully!');
                 const data = await response.json();
                 console.log(data);
                 setUser(data.user);
@@ -178,6 +178,7 @@ const UpdateProfile = () => {
 
                 </div>
             </div>
+            < ToastContainer/>
         </div>
     )
 }
