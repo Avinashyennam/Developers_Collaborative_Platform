@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from "react";
-// import * as jwtDecode from 'jwt-decode';
 export const DevContext = createContext(null);
 
 const DevContextProvider = ({ children }) => {
@@ -49,22 +48,6 @@ const DevContextProvider = ({ children }) => {
             // setLoading(false);
         }
     }, []);
-    // console.log(sessionStorage.getItem("token"));
-
-    // const getUserId = ()=>{
-    //     const token = localStorage.getItem('token');
-    //     console.log(token);
-    //     if (!token) return null;
-    //     try{
-    //         const decoded = jwt_decode(token);
-    //         setId(decoded.id);
-    //         console.log("Id is ", id);
-    //     } catch{
-    //         console.error("Failed to decode token", error);
-    //     }
-    // }
-
-    // const contextValue = ;
     return (
         <DevContext.Provider value={{ id, setUserId, isLogin, setIsLogin, user, setUser }}>
             {children}

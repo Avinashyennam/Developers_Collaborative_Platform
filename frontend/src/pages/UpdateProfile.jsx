@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 import { DevContext } from '../context/Context';
 import '../App.css';
 const UpdateProfile = () => {
 
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [experienceLevel, setExperienceLevel] = useState('');
     const [bio, setBio] = useState('');
@@ -21,7 +25,8 @@ const UpdateProfile = () => {
             .filter(skill => skill && !skills.includes(skill));
 
         setSkills([...skills, ...newSkills]);
-        alert("Skills added!")
+        // alert("Skills added!")
+        toast.success('Skills added!', { position: 'top-center' });
     };
 
     const handleInterestAdd = (e) => {
@@ -33,7 +38,8 @@ const UpdateProfile = () => {
             .map(interest => interest.trim()) // Trim each interest
             .filter(interest => interest && !interests.includes(interest)); // Exclude empty or duplicate interests
         setInterests([...interests, ...newInterests]);
-        alert("Interests added");
+        // alert("Interests added");
+        toast.success('Interests added!', { position: 'top-center' });
     };
 
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
@@ -71,6 +77,8 @@ const UpdateProfile = () => {
                 const data = await response.json();
                 console.log(data);
                 setUser(data.user);
+                toast.success('Profile updated!', { position: 'top-center' });
+                navigate("/profile", {replace: true});
             } else {
                 alert('Failed to submit profile.');
             }

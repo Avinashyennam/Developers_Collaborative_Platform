@@ -9,34 +9,6 @@ const Matches = () => {
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(DevContext);
-    // console.log("Current ID:", id);
-
-
-    // useEffect(() => {
-    //     const fetchMatches = async () => {
-    //         if (!id) {
-    //             console.log("User ID is not set yet.");
-    //             return; // Exit if id is null
-    //         }
-    //         try {
-    //             setLoading(true);
-    //             const response = await fetch(`http://localhost:5000/api/users/matchusers/${id}`);
-    //             if (!response.ok) {
-    //                 throw new Error('Failed to fetch matches');
-    //             }
-
-    //             const data = await response.json();
-    //             console.log(data);
-    //             setMatches(data);
-    //             console.log(matches);
-    //         } catch (error) {
-    //             console.log("failed to fetch users..");
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-    //     fetchMatches();
-    // }, [id])
 
     useEffect(() => {
         const fetchMatches = async () => {

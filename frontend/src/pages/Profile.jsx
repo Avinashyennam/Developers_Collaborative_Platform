@@ -69,8 +69,7 @@ const Profile = () => {
             if (response.ok) {
                 sessionStorage.clear();
                 setUser(null);
-                console.log("after deleting acc",user);
-                
+                console.log("after deleting acc",user);                
                 navigate('/', { replace: true });
                 // window.location.reload();
             }

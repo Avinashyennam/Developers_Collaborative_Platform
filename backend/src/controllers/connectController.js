@@ -9,8 +9,8 @@ const sendConnRequest = async (req, res) => {
             return res.status(400).json({ message: "both user id's are required" });
         }
 
-        const requester = await User.findById(requesterId);
-        const recipient = await User.findById(recipientId);
+        const requester = await User.findById(requesterId).select('-password');
+        const recipient = await User.findById(recipientId).select('-password');
         if (!requester || !recipient) {
             return res.status(404).json({ message: "user not found" });
         }
@@ -45,8 +45,8 @@ const acceptConnRequest = async (req, res) => {
             return res.status(400).json({ message: "both user id's are required" });
         }
 
-        const user = await User.findById(userId);
-        const requester = await User.findById(requesterId);
+        const user = await User.findById(userId).select('-password');
+        const requester = await User.findById(requesterId).select('-password');
         // check if both users exist or not
         if (!user || !requester) {
             return res.status(404).json({ message: "user not found" });
@@ -94,7 +94,7 @@ const acceptConnRequest = async (req, res) => {
 const rejectConnRequest = async (req, res) => {
     try {
         const { userId, requesterId } = req.body;
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select('-password');
 
         // check if user exist or not
         if (!user) {

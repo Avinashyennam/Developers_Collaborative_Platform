@@ -12,7 +12,7 @@ const authenticateToken = async (req, res, next) => {
         const userId = decoded.id; // Assuming the token payload contains the user ID
 
         // Retrieve the user profile from the database
-        const userProfile = await User.findById(userId);
+        const userProfile = await User.findById(userId).select('-password');
         if (!userProfile) {
             return res.status(404).json({ error: 'User not found' });
         }

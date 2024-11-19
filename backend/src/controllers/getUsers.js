@@ -36,7 +36,7 @@ const updateProfile = async (req, res) => {
         const { name, skills, interests, experienceLevel, bio } = req.body;
         const id  = req.user._id;
 
-        let user = await User.findById(id);
+        let user = await User.findById(id).select('-password');
         if (user == null) {
             return res.status(404).json({ message: "user not found" });
         }
@@ -110,7 +110,7 @@ const deleteAcc = async (req, res) => {
         const id = req.user._id;
 
         // check if user exist or not
-        let user = await User.findById(id);
+        let user = await User.findById(id).select('-password');
         if (!user) {
             return res.status(404).json({ message: "user not found" });
         }
