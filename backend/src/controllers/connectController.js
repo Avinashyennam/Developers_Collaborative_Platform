@@ -5,8 +5,14 @@ const Match = require("../models/matches");
 const sendConnRequest = async (req, res) => {
     try {
         const { requesterId, recipientId } = req.body;
-        if (!requesterId || !recipientId) {
-            return res.status(400).json({ message: "both user id's are required" });
+        // if (!requesterId || !recipientId) {
+        //     return res.status(400).json({ message: "both user id's are required" });
+        // }
+        if(!requesterId){
+            return res.status(400).json({ message: "requester id is missing" });
+        }
+        if(!recipientId){
+            return res.status(400).json({ message: "recepient id is missing" });
         }
 
         const requester = await User.findById(requesterId).select('-password');

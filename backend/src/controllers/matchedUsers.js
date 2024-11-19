@@ -70,6 +70,7 @@ const matches = async (req, res) => {
                             input: "$matchedUsers",
                             as: "user",
                             in: {
+                                _id: "$$user._id",
                                 name: "$$user.name",
                                 email: "$$user.email",
                                 skills: "$$user.skills",
