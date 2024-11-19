@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { DevContext } from '../context/Context';
 import AcceptUser from '../components/Accept';
 import RejectUser from '../components/Reject';
 const PendingConnections = () => {
     const [pendingConn, setPendingConn] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { id } = useContext(DevContext);
+    const { user } = useContext(DevContext);
+    const id = user._id;
 
     useEffect(() => {
         const fetchPendingConn = async () => {
@@ -94,6 +97,7 @@ const PendingConnections = () => {
                     }
                 </ul>
             </div>
+            <ToastContainer />
         </div>
     )
 }

@@ -15,7 +15,7 @@ router.put("/updateprofile", authenticateToken, updateProfile);        // route 
 router.get("/getprofile", authenticateToken , profilePic);    // route to fetch profile picture
 router.post("/addproject", authenticateToken, addProject);               // route to add projects
 router.get("/getprojects", authenticateToken, getProjects);               // route to read projects
-router.delete("/:id/projects/:projectId", deleteProject);   // route to delete specific project
+router.delete("/:id/deleteproject/:projectId", deleteProject);   // route to delete specific project
 router.get("/:userId/projects/:projectId", specificProject)     // route to fetch specific project
 router.get("/matchusers", authenticateToken, matches);              // route to match users and calculate the matching score
 router.delete("/deleteaccount", authenticateToken, deleteAcc);             // route to delete user account

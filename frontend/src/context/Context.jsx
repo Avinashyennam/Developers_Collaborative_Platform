@@ -49,6 +49,7 @@ const DevContextProvider = ({ children }) => {
             // setLoading(false);
         }
     }, []);
+    // console.log(sessionStorage.getItem("token"));
 
     // const getUserId = ()=>{
     //     const token = localStorage.getItem('token');

@@ -1,8 +1,17 @@
 const User = require("../models/user");
-
+const mongoose = require("mongoose");
 const matches = async (req, res) => {
     try {
+        if (mongoose.connection.readyState !== 1) {
+            throw new Error('Database not connected');
+        }
+    
         const id = req.user._id;
+        // Verify ID format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid user ID format' });
+        }
+        
         const user = await User.findById(id).populate({
             path: 'matches',
             select: 'name email skills interests experienceLevel profilePicture'

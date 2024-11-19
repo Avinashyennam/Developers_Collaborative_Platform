@@ -8,7 +8,7 @@ import connectUser from '../components/connectUser'
 const Matches = () => {
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { id } = useContext(DevContext);
+    const { user } = useContext(DevContext);
     // console.log("Current ID:", id);
 
 
@@ -44,7 +44,7 @@ const Matches = () => {
             if (!token) {
                 console.log("Token not found in session storage.");
                 return; // Exit if token is not found
-            }     
+            }
             try {
                 setLoading(true);
                 const response = await fetch(`http://localhost:5000/api/users/matchusers`, {
@@ -52,11 +52,11 @@ const Matches = () => {
                         token: sessionStorage.getItem('token'), // Include token in the headers for authorization if required
                     },
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch matches');
                 }
-    
+
                 const data = await response.json();
                 console.log(data);
                 setMatches(data);
@@ -66,12 +66,13 @@ const Matches = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchMatches();
-    },[]); // Include `id` in the dependency array
-    
+    }, []); // Include `id` in the dependency array
+
 
     const handleConnect = (recipientId) => {
+        const id = user._id;
         connectUser(recipientId, id);
     };
 
@@ -140,7 +141,80 @@ const Matches = () => {
                 </div> :
                 <div className='flex flex-col items-center gap-10'>
                     <h2 className='text-2xl'>Your Matches</h2>
-                    <div className='flex gap-10 w-full'>
+                    {
+                        matches.length === 0 ?
+                            <div>
+                                <h1>Currently you don't have any matches to your profile....</h1>
+                            </div> :
+                            <div className='flex gap-10 w-full'>
+                                <motion.div
+                                    initial={{ opacity: 0, x: 100 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.7 }}
+                                    key={animationKey}
+                                    className='w-1/2'
+                                >
+                                    {selectedUser ? (
+                                        <div
+                                            className='flex flex-col items-center gap-8 border rounded-lg p-4 bg-slate-200 shadow-xl'
+                                        >
+                                            <div>
+                                                <img src={selectedUser.profilePicture} alt='not found' width={400} height={300} className='rounded-md' />
+                                            </div>
+                                            <div className='flex flex-col gap-2 text-xl'>
+                                                <h1 className='font-semibold'>{selectedUser.name}</h1>
+                                                <div className='flex gap-2 items-center'>
+                                                    <FontAwesomeIcon icon={faEnvelope} className='text-2xl text-green-800' />
+                                                    <h2>{selectedUser.email}</h2>
+                                                </div>
+
+                                            </div>
+                                            <div className='text-lg flex flex-col gap-4'>
+                                                <div className='flex gap-2 items-center'>
+                                                    <FontAwesomeIcon icon={faClipboard} className='text-2xl text-green-800' />
+                                                    <h5>Bio:</h5>
+                                                    <p>A Passionate Fullstack Developer</p>
+                                                </div>
+                                                <div className='flex gap-2 items-center'>
+                                                    <FontAwesomeIcon icon={faLaptopCode} className='text-2xl text-green-800' />
+                                                    <h5>Skills:</h5>
+                                                </div>
+
+                                                <ul className='flex gap-4 flex-wrap'>
+                                                    {selectedUser.skills.map((skill, index) => (
+                                                        <li key={index}>{skill}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <button className='w-24 h-10 hover:bg-red-500 transition-colors hover:text-white duration-300 rounded-lg border-[1px] border-slate-950 hover:border-0' onClick={() => handleConnect(selectedUser._id)}>Connect</button>
+                                        </div>
+                                    ) : (
+                                        <p>Select a user to see details</p>
+                                    )}
+                                </motion.div>
+                                <div className='w-1/2 flex flex-col items-center gap-4'>
+                                    {
+                                        matches.map((match) => {
+                                            return (
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.5 }}
+                                                    whileInView={{ opacity: 1, scale: 1 }}
+                                                    viewport={{ once: true }}
+                                                    transition={{ duration: 1 }}
+                                                    key={match._id}
+                                                    onClick={() => handleUserClick(match)}
+                                                    className='h-24 w-24 rounded-full overflow-hidden'
+                                                >
+                                                    <img src={match.profilePicture} alt="not found" className='shadow-2xl shadow-indigo-500/50 w-full h-full object-cover' />
+                                                </motion.div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </div>
+                    }
+                    {/* <div className='flex gap-10 w-full'>
                         <motion.div
                             initial={{ opacity: 0, x: 100 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -206,7 +280,7 @@ const Matches = () => {
                                 })
                             }
                         </div>
-                    </div>
+                    </div> */}
                 </div >
             }
         </div >

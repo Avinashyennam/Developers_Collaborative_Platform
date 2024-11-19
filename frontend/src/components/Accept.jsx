@@ -1,4 +1,5 @@
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const AcceptUser = async (requesterId, userId) => {
     try {
         const response = await fetch(`http://localhost:5000/api/users/accept`, {
@@ -12,11 +13,12 @@ const AcceptUser = async (requesterId, userId) => {
         if (response.ok) {
             const responseData = await response.json();
             console.log("Connection request Accepted:", responseData);
-            alert("Connection request accepted successfully!");
+            // alert("Connection request accepted successfully!");
+            toast.success('Connection request accepted!', { position: 'top-center' });
         } else {
             const errorData = await response.json();
             console.log("Error accepting connection request:", errorData);
-            alert("Failed to accept connection request.");
+            toast.error(`Error accepting connection request: ${errorData.message}`, { position: 'top-center' });
         }
     } catch (error) {
         console.error("Error:", error);

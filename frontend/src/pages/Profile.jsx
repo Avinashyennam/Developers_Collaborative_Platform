@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { DevContext } from "../context/Context";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpRightFromSquare, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faBuilding, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
+    const navigate = useNavigate();
 
     const { user, setUser } = useContext(DevContext);
     const [showModal, setShowModal] = useState(false);
@@ -43,6 +44,8 @@ const Profile = () => {
 
                 toast.success('Project added successfully!', { position: 'top-center' });
                 setProjectData({ title: '', description: '', githubLink: '' });
+                const data = await response.json();
+                setUser({ ...user, projects: data.projects });
                 setShowModal(false);
             } else {
                 // console.error("Failed to add project");
@@ -64,10 +67,12 @@ const Profile = () => {
                 }
             });
             if (response.ok) {
+                sessionStorage.clear();
                 setUser(null);
-                sessionStorage.removeItem("token");
-                const navigate = useNavigate();
-                navigate('/');
+                console.log("after deleting acc",user);
+                
+                navigate('/', { replace: true });
+                // window.location.reload();
             }
         } catch (error) {
             console.error("error is", error);
@@ -111,6 +116,26 @@ const Profile = () => {
         }
     };
 
+    const deleteProject = async(projectId)=>{
+        try {
+            const id = user._id;
+            const response = await fetch(`http://localhost:5000/api/users/${id}/deleteproject/${projectId}`,{
+                method: "DELETE"
+            });
+            if(response.ok){
+                const data = await response.json();
+                setUser({...user, projects: data.updatedProjects});
+                toast.success('Project deleted successfully!', { position: 'top-center' });
+            }
+            else{
+                const errorData = await response.json();
+                toast.error(`Error: ${errorData.message}`, { position: 'top-center' });
+            }
+        } catch (error) {
+            console.error("error while deleting project", error);
+        }
+    }
+
     // console.log(user);
 
     if (!user) {
@@ -141,15 +166,6 @@ const Profile = () => {
                                             {(user?.name?.[0]?.toUpperCase() || '?')}
                                         </div>
                                 }
-                                {/* Hover Effect
-                                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button
-                                        onClick={() => setImageModal(true)}
-                                        className="bg-blue-500 text-white px-3 py-1 rounded-full"
-                                    >
-                                        Change Picture
-                                    </button>
-                                </div> */}
                             </div>
                         </div>
 
@@ -160,12 +176,6 @@ const Profile = () => {
                                 <p>{user.bio}</p> :
                                 <p>Passionate Software Developer</p>
                             }
-                            {/* <button
-                                onClick={() => setImageModal(true)}
-                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-                            >
-                                Update Profile Picture
-                            </button> */}
                             <h3>Experience level: {user.experienceLevel}</h3>
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-600 flex gap-1 items-center">
@@ -240,18 +250,36 @@ const Profile = () => {
                     </div>
                 </div>
 
+                {/* Projects Section */}
                 <div className="px-10 py-6 border-t border-gray-200 w-full max-w-md bg-white rounded-lg shadow-lg">
                     <h3 className="flex flex-col gap-1 text-gray-800 font-bold text-xl border-b pb-3 mb-4">Projects</h3>
                     {user.projects.length > 0 ? (
                         user.projects.map((project, index) => (
-                            <div key={index} className="mb-6 shadow-inner p-2">
-                                <h4 className="text-lg font-semibold text-blue-600">{project.title}</h4>
-                                <p className="text-gray-700">{project.description}</p>
+
+                            <div key={index} className="mb-6 shadow-inner p-2 flex justify-between">
+                                <div>
+                                    <div className="flex gap-2">
+                                        <h4 className="text-lg font-semibold text-blue-600">{project.title}</h4>
+                                        {project.githubLink && (
+                                            <a
+                                                href={project.githubLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 flex items-center"
+                                            >
+                                                {/* <span className="hover:underline">View Project</span> */}
+                                                <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm"/>
+                                            </a>
+                                        )}
+                                    </div>
+
+                                    <p className="text-gray-700">{project.description}</p>
+                                </div>
                                 {/* <div className="text-sm text-gray-500 mt-1">
                                     <span>Tech Stack: </span>
                                     <span className="text-gray-700 font-medium">{project.techStack.join(', ')}</span>
                                 </div> */}
-                                {project.githubLink && (
+                                {/* {project.githubLink && (
                                     <a
                                         href={project.githubLink}
                                         target="_blank"
@@ -261,7 +289,9 @@ const Profile = () => {
                                         <span className="hover:underline">View Project</span>
                                         <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm" />
                                     </a>
-                                )}
+                                )} */}
+                                <FontAwesomeIcon icon={faTrash} size="md" className="text-red-600 mr-2 mt-2 cursor-pointer"  onClick={()=> deleteProject(project._id)}/>
+                                
                             </div>
                         ))
                     ) : (

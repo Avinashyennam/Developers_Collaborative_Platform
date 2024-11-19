@@ -21,7 +21,7 @@ const addProject = async (req, res) => {
             return res.status(404).json({ message: "user not found" });
         }
 
-        res.status(200).json({ message: "Projects added successfully", user });
+        res.status(200).json({ message: "Projects added successfully", projects: user.projects });
     } catch (error) {
         console.log("Error while adding project", error);
         res.status(500).json({ message: "Internal server error at adding projects" });
