@@ -12,6 +12,7 @@ let Navbar = () => {
                 <div>
                     <ul className='flex justify-between gap-8 text-xl'>
                         <Link to="/"><li>Home</li></Link>
+                        <Link to="/blogs"><li>Posts</li></Link>
                         <Link to="/matches"><li>Matches</li></Link>
                         <Link to="/connections"><li>Connections</li></Link>
                         <Link to="/pendingconnections"><li>Pending Connections</li></Link>

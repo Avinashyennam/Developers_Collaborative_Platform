@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useCallback } from "react";
 export const DevContext = createContext(null);
 
 const DevContextProvider = ({ children }) => {
@@ -9,6 +9,20 @@ const DevContextProvider = ({ children }) => {
         const token = sessionStorage.getItem('token');
         return token && token.length > 0 ? true : false;
     });
+    const [blogs, setBlogs] = useState([]);
+    const fetchBlogs = useCallback(async () => {
+        try {
+          const response = await fetch("http://localhost:5000/api/users/allblogs"); // Replace with your actual backend API
+          if (!response.ok) {
+            throw new Error("Failed to fetch blogs");
+          }
+          const data = await response.json();
+          setBlogs(data.blogs);
+        } catch (error) {
+          console.error("Error fetching blogs:", error);
+        }
+      }, 
+    []);
 
     useEffect(() => {
         async function getUser() {
@@ -49,7 +63,7 @@ const DevContextProvider = ({ children }) => {
         }
     }, []);
     return (
-        <DevContext.Provider value={{ id, setUserId, isLogin, setIsLogin, user, setUser }}>
+        <DevContext.Provider value={{ id, setUserId, isLogin, setIsLogin, user, setUser, blogs, fetchBlogs }}>
             {children}
         </DevContext.Provider>
     )
