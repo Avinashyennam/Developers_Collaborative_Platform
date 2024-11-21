@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const ProfilePic = () => {
     const [profilePic, setProfilePic] = useState(null);
-    const { isLogin, setIsLogin, user } = useContext(DevContext);
+    const { isLogin, setIsLogin, user, setUser } = useContext(DevContext);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ const ProfilePic = () => {
     const handleLogout = () => {
         setIsLogin(false);
         setIsOpen(false);
+        setUser(null);
         sessionStorage.removeItem('token');
         navigate('/login');
     };

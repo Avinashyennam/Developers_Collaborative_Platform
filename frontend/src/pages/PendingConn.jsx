@@ -115,7 +115,7 @@ const PendingConnections = () => {
     const [pendingConn, setPendingConn] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(DevContext);
-    const id = user._id;
+    // const id = user._id;
 
     useEffect(() => {
         const fetchPendingConn = async () => {
@@ -147,9 +147,11 @@ const PendingConnections = () => {
     }, []);
 
     const handleAccept = (requesterId) => {
+        const id = user._id;
         AcceptUser(requesterId, id);
     };
     const handleReject = (requesterId) => {
+        const id = user._id;
         RejectUser(requesterId, id);
     };
 

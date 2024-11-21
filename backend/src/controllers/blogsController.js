@@ -205,7 +205,7 @@ const addComment = async (req, res) => {
 }
 
 // delete a blog
-const deleteBlog = async(req, res)=>{
+const deleteBlog = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -224,7 +224,7 @@ const deleteBlog = async(req, res)=>{
 }
 
 // delete a comment
-const deleteComment = async(req, res)=>{
+const deleteComment = async (req, res) => {
     try {
         const { id, commentId } = req.params;
 
@@ -257,4 +257,49 @@ const deleteComment = async(req, res)=>{
     }
 }
 
-module.exports = { addBlog, getBlog, getBlogs, addLike, addComment, deleteBlog, deleteComment };
+// blogs of a user
+const userBlogs = async (req, res) => {
+    // 
+    
+    try {
+        // Validate if userId is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(req.user._id)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid user ID format' 
+            });
+        }
+
+        // Find all blogs where author matches the userId
+        const userBlogs = await Blog.find({ author: req.user._id })
+            .sort({ createdAt: -1 }) // Sort by creation date, newest first
+            .populate('author', 'name email profilePicture') // Populate author details
+            .populate('comments.user', 'name profilePicture') // Populate comment user details
+            .select('-__v'); // Exclude version key
+
+        // Check if any blogs were found
+        if (!userBlogs.length) {
+            return res.status(404).json({
+                success: false,
+                message: 'No blogs found for this user'
+            });
+        }
+
+        // Return the blogs
+        res.status(200).json({
+            success: true,
+            count: userBlogs.length,
+            data: userBlogs
+        });
+
+    } catch (error) {
+        console.error('Error fetching user blogs:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching user blogs',
+            error: error.message
+        });
+    }
+}
+
+module.exports = { addBlog, getBlog, getBlogs, addLike, addComment, deleteBlog, deleteComment, userBlogs };

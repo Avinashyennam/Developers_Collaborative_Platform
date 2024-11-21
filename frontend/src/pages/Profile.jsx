@@ -424,7 +424,8 @@ import {
     faTrash,
     faPlus,
     faImage,
-    faExternalLinkAlt
+    faExternalLinkAlt,
+    faBook, faNewspaper
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -435,11 +436,79 @@ const Profile = () => {
     const [showModal, setShowModal] = useState(false);
     const [imageModal, setImageModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [blogs, setBlogs] = useState([]);
     const [projectData, setProjectData] = useState({
         title: "",
         description: "",
         githubLink: ""
     });
+
+    // useEffect(async ()=>{
+    //     try {
+    //         // console.log(user);
+    //         // const userId = user._id;
+            
+    //         const response = await fetch(`http://localhost:5000/api/users/blogs`,{
+    //             headers: {
+    //                 token: sessionStorage.getItem("token")
+    //             }
+    //         })
+    //         if(response.ok){
+    //             const data = await response.json();
+    //             // setUser(...user,{
+    //             //     blogs: data.data
+    //             // });
+    //             // console.log(user.blogs);
+    //             console.log(data);
+    //             setBlogs(data);
+    //         }
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     }
+    // }, [])
+
+    // In your services or utils folder, create a blogService.js or blogApi.js
+    // const fetchUserBlogs = async (userId) => {
+    //     try {
+    //         const response = await fetch(`http://localhost:5000/api/user/${userId}/blogs`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'token': sessionStorage.getItem('token')
+    //             }
+    //         });
+
+    //         if (!response.ok) {
+    //             const errorData = await response.json();
+    //             throw new Error(errorData.message || 'Failed to fetch user blogs');
+    //         }
+
+    //         const data = await response.json();
+    //         return data.data; // Returns the array of blogs
+    //     } catch (error) {
+    //         console.error('Error fetching user blogs:', error);
+    //         throw error;
+    //     }
+    // };
+
+    // // In your Profile component, modify the useEffect to fetch blogs
+    // useEffect(() => {
+    //     const getUserBlogs = async () => {
+    //         try {
+    //             if (user && user._id) {
+    //                 const blogs = await fetchUserBlogs(user._id);
+    //                 setUser(prevUser => ({
+    //                     ...prevUser,
+    //                     blogs: blogs
+    //                 }));
+    //             }
+    //         } catch (error) {
+    //             toast.error('Failed to load blogs', { position: 'top-center' });
+    //         }
+    //     };
+
+    //     getUserBlogs();
+    // }, []);
 
     const handleAddProject = async (e) => {
         e.preventDefault();
@@ -748,6 +817,95 @@ const Profile = () => {
                         )}
                     </AnimatePresence>
                 </motion.div>
+
+                {/* Blogs Section */}
+                {/* <motion.div
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="md:col-span-3 bg-white shadow-xl rounded-2xl p-6"
+                >
+                    <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-2xl font-bold text-gray-800">
+                            <FontAwesomeIcon icon={faBook} className="mr-3" />
+                            Blogs
+                        </h3>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => navigate('/create-blog')} // Adjust the route as needed
+                            className="bg-indigo-500 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                        >
+                            <FontAwesomeIcon icon={faNewspaper} className="mr-2" /> Write Blog
+                        </motion.button>
+                    </div>
+
+                    <AnimatePresence>
+                        {user.blogs && user.blogs.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {user.blogs.map((blog, index) => (
+                                    <motion.div
+                                        key={blog._id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                                    >
+                                        <Link to={`/blog/${blog._id}`}>
+                                            {blog.photos && blog.photos.length > 0 ? (
+                                                <div className="h-48 overflow-hidden">
+                                                    <img
+                                                        src={blog.photos[0].url}
+                                                        alt={blog.title}
+                                                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="h-48 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                                                    <FontAwesomeIcon
+                                                        icon={faNewspaper}
+                                                        className="text-white text-4xl"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="p-4">
+                                                <h4 className="text-lg font-semibold text-gray-800 hover:text-indigo-600 transition-colors">
+                                                    {blog.title}
+                                                </h4>
+                                                <motion.div
+                                                    className="mt-2 flex items-center text-gray-600 text-sm"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ delay: 0.2 }}
+                                                >
+                                                    <FontAwesomeIcon icon={faUser} className="mr-2" />
+                                                    {new Date(blog.createdAt).toLocaleDateString()}
+                                                </motion.div>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-gray-500 text-center py-8"
+                            >
+                                <FontAwesomeIcon icon={faNewspaper} className="text-4xl mb-3" />
+                                <p>No blogs published yet</p>
+                                <Link
+                                    to="/create-blog"
+                                    className="text-indigo-500 hover:text-indigo-600 font-medium mt-2 inline-block"
+                                >
+                                    Write your first blog
+                                </Link>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div> */}
+
             </div>
 
             {/* Modal for Adding Project */}

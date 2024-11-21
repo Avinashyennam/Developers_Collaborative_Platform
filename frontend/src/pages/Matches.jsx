@@ -262,6 +262,7 @@
 // export default Matches;
 
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode, faEnvelope, faNetworkWired, faUser, faTrophy } from '@fortawesome/free-solid-svg-icons';
@@ -273,6 +274,11 @@ const Matches = () => {
     const [loading, setLoading] = useState(true);
     const [selectedUser, setSelectedUser] = useState(null);
     const { user } = useContext(DevContext);
+
+    // const navigate = useNavigate();
+    // if(!sessionStorage.getItem("token")){
+    //     navigate("/login");
+    // }
 
     useEffect(() => {
         const fetchMatches = async () => {
