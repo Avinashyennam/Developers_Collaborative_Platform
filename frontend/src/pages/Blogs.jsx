@@ -361,7 +361,7 @@ const BlogsPage = () => {
                     )}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg text-gray-800">
+                    <h3 className="font-semibold  text-gray-800">
                       {blog.authorDetails.name}
                     </h3>
                     <p className="text-sm text-gray-500">
@@ -371,7 +371,7 @@ const BlogsPage = () => {
                 </motion.div>
 
                 <motion.h2 
-                  className="text-2xl font-bold text-gray-900 mb-3"
+                  className="text-xl font-semibold text-gray-900 mb-3"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
@@ -380,7 +380,7 @@ const BlogsPage = () => {
                 </motion.h2>
 
                 <motion.p 
-                  className="text-gray-600 mb-6 line-clamp-3"
+                  className="text-gray-600 mb-6 line-clamp-3 text-sm"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
@@ -399,14 +399,14 @@ const BlogsPage = () => {
                       key={idx}
                       src={photo.url}
                       alt={photo.caption}
-                      className="w-full h-64 object-cover rounded-lg"
+                      className="w-full h-60 object-cover rounded-lg"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.2 }}
                     />
                   ))}
                 </motion.div>
 
-                <div className="mt-6 flex items-center justify-between">
+                {/* <div className="mt-6 flex items-center justify-between">
                   <div className="flex space-x-6">
                     <motion.button
                       whileHover={{ scale: 1.1 }}
@@ -433,9 +433,9 @@ const BlogsPage = () => {
                       <span className="text-gray-600">{blog.comments?.length || 0}</span>
                     </motion.button>
                   </div>
-                </div>
+                </div> */}
 
-                <motion.div 
+                {/* <motion.div 
                   className="mt-6"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -458,7 +458,7 @@ const BlogsPage = () => {
                       <FontAwesomeIcon icon={faPaperPlane} />
                     </motion.button>
                   </div>
-                </motion.div>
+                </motion.div> */}
               </div>
             </motion.div>
           ))}

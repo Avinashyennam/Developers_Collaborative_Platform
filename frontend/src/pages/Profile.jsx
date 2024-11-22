@@ -431,7 +431,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { user, setUser } = useContext(DevContext);
     const [showModal, setShowModal] = useState(false);
     const [imageModal, setImageModal] = useState(false);
@@ -443,29 +443,33 @@ const Profile = () => {
         githubLink: ""
     });
 
-    // useEffect(async ()=>{
-    //     try {
-    //         // console.log(user);
-    //         // const userId = user._id;
-            
-    //         const response = await fetch(`http://localhost:5000/api/users/blogs`,{
-    //             headers: {
-    //                 token: sessionStorage.getItem("token")
-    //             }
-    //         })
-    //         if(response.ok){
-    //             const data = await response.json();
-    //             // setUser(...user,{
-    //             //     blogs: data.data
-    //             // });
-    //             // console.log(user.blogs);
-    //             console.log(data);
-    //             setBlogs(data);
-    //         }
-    //     } catch (error) {
-    //         console.error(error.message);
-    //     }
-    // }, [])
+    useEffect(async () => {
+        try {
+            // console.log(user);
+            // const userId = user._id;
+
+            const response = await fetch(`http://localhost:5000/api/users/blogs`, {
+                headers: {
+                    token: sessionStorage.getItem("token")
+                }
+            })
+            if (response.ok) {
+                const data = await response.json();
+                // setUser(...user,{
+                //     blogs: data.data
+                // });
+                // console.log(user.blogs);
+                console.log(data);
+                setBlogs(data.data);
+            }
+            else {
+                // Handle non-ok response
+                console.error('Failed to fetch blogs');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    }, [localStorage.getItem("token")]);
 
     // In your services or utils folder, create a blogService.js or blogApi.js
     // const fetchUserBlogs = async (userId) => {
@@ -905,6 +909,18 @@ const Profile = () => {
                         )}
                     </AnimatePresence>
                 </motion.div> */}
+                <div>
+                    {blogs.length > 0 ?
+                        <ul>
+                            {blogs.map((blog)=>(
+                                <li key={blog._id}>
+                                    <h1>{blog.title}</h1>
+                                </li>
+                            ))}
+                        </ul> :
+                        <div></div>
+                    }
+                </div>
 
             </div>
 
@@ -965,7 +981,7 @@ const Profile = () => {
                         </form>
                     </div>
                 </div>
-            )};
+            )}
 
             {/* Modal for Image Upload */}
             {imageModal && (

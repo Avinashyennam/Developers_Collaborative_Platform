@@ -311,19 +311,21 @@ const Matches = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-100">
-                <motion.div 
+            <div className="flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+                {/* <motion.div 
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     className="w-24 h-24 border-8 border-blue-500 border-t-transparent rounded-full"
-                />
+                /> */}
+                <img src="/rb_2299.png" alt='not found' width={600} height={400} />
+                <h1 className='text-2xl font-semibold'>Login to know your matches</h1>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 py-16 px-8">
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -334,7 +336,7 @@ const Matches = () => {
                 </h1>
 
                 {matches.length === 0 ? (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="text-center text-gray-600 text-2xl"
@@ -344,7 +346,7 @@ const Matches = () => {
                 ) : (
                     <div className="grid grid-cols-12 gap-8">
                         {/* Matches Sidebar */}
-                        <motion.div 
+                        <motion.div
                             initial={{ x: -50, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ duration: 0.5 }}
@@ -358,15 +360,15 @@ const Matches = () => {
                                     onClick={() => setSelectedUser(match)}
                                     className={`
                                         cursor-pointer p-4 rounded-xl transition-all 
-                                        ${selectedUser?._id === match._id 
-                                            ? 'bg-blue-500 text-white shadow-xl' 
+                                        ${selectedUser?._id === match._id
+                                            ? 'bg-blue-500 text-white shadow-xl'
                                             : 'bg-white text-gray-800 hover:bg-blue-100 shadow-md'}
                                     `}
                                 >
                                     <div className="flex items-center space-x-4">
-                                        <img 
-                                            src={match.profilePicture} 
-                                            alt={match.name} 
+                                        <img
+                                            src={match.profilePicture}
+                                            alt={match.name}
                                             className="w-16 h-16 rounded-full object-cover"
                                         />
                                         <div>
@@ -393,9 +395,9 @@ const Matches = () => {
                                 >
                                     <div className="grid grid-cols-2 gap-8">
                                         <div>
-                                            <img 
-                                                src={selectedUser.profilePicture} 
-                                                alt={selectedUser.name} 
+                                            <img
+                                                src={selectedUser.profilePicture}
+                                                alt={selectedUser.name}
                                                 className="w-full rounded-xl shadow-lg"
                                             />
                                         </div>
@@ -416,8 +418,8 @@ const Matches = () => {
                                                 {/* <h3>{selectedUser._id}</h3> */}
                                                 <div className="flex flex-wrap gap-2">
                                                     {selectedUser.skills.map((skill, index) => (
-                                                        <span 
-                                                            key={index} 
+                                                        <span
+                                                            key={index}
                                                             className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
                                                         >
                                                             {skill}
