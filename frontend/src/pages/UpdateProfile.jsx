@@ -3,6 +3,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { DevContext } from '../context/Context';
+import SkillsAutocomplete from '../components/Skills';
 import '../App.css';
 const UpdateProfile = () => {
 
@@ -14,20 +15,28 @@ const UpdateProfile = () => {
     const [inputSkill, setInputSkill] = useState('');
     const [interests, setInterests] = useState([]);
     const [inputInterest, setInputInterest] = useState('');
-    const {user, setUser} = useContext(DevContext);
+    const { user, setUser } = useContext(DevContext);
 
 
-    const handleSkillAdd = (e) => {
-        e.preventDefault();
-        const newSkills = inputSkill
-            .split(',')
-            .map(skill => skill.trim())
-            .filter(skill => skill && !skills.includes(skill));
+    // const handleSkillAdd = (e) => {
+    //     e.preventDefault();
+    //     const newSkills = inputSkill
+    //         .split(',')
+    //         .map(skill => skill.trim())
+    //         .filter(skill => skill && !skills.includes(skill));
 
-        setSkills([...skills, ...newSkills]);
-        // alert("Skills added!")
-        toast.success('Skills added!', { position: 'top-center' });
+    //     setSkills([...skills, ...newSkills]);
+    //     // alert("Skills added!")
+    //     toast.success('Skills added!', { position: 'top-center' });
+    // };
+
+
+    const handleSkillAdd = (newSkill) => {
+        if (!skills.includes(newSkill)) {
+            setSkills([...skills, newSkill]);
+        }
     };
+
 
     const handleInterestAdd = (e) => {
         e.preventDefault();
@@ -78,7 +87,7 @@ const UpdateProfile = () => {
                 console.log(data);
                 setUser(data.user);
                 toast.success('Profile updated!', { position: 'top-center' });
-                navigate("/profile", {replace: true});
+                navigate("/profile", { replace: true });
             } else {
                 alert('Failed to submit profile.');
             }
@@ -126,7 +135,9 @@ const UpdateProfile = () => {
                             />
                         </label>
 
-                        <label className="block mb-4">
+                        <SkillsAutocomplete onSkillAdd={handleSkillAdd} />
+
+                        {/* <label className="block mb-4">
                             <span className="text-black-700">Skills (comma-separated):</span>
                             <div className='flex'>
                                 <input
@@ -145,7 +156,7 @@ const UpdateProfile = () => {
                                     Add
                                 </button>
                             </div>
-                        </label>
+                        </label> */}
 
                         <label className="block mb-4">
                             <span className="text-black-700">Interests (comma-separated):</span>
@@ -178,7 +189,7 @@ const UpdateProfile = () => {
 
                 </div>
             </div>
-            < ToastContainer/>
+            < ToastContainer />
         </div>
     )
 }

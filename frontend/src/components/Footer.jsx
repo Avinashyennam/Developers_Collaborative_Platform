@@ -12,7 +12,7 @@ const Footer = () => {
                 <div>
                     <ul className="flex gap-10">
                         <Link to="/"><li>Home</li></Link>
-                        <Link to="/blogs"><li>Posts</li></Link>
+                        <Link to="/blogs"><li>Blogs</li></Link>
                         <Link to="/matches"><li>Matches</li></Link>
                         <Link to="/connections"><li>Connections</li></Link>
                         <Link to="/pendingconnections"><li>Pending Connections</li></Link>
