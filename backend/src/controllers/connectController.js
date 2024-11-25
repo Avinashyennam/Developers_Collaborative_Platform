@@ -31,7 +31,14 @@ const sendConnRequest = async (req, res) => {
 
         // Add the connection request to the recipient's pendingConnections
         recipient.pendingConnections.push({ from: requesterId });
-        await recipient.save();
+        // await recipient.save();
+
+        requester.matches = requester.matches.filter(
+            (match) => match.toString() !== recipientId
+        );
+    
+        // Save both requester and recipient
+        await Promise.all([requester.save(), recipient.save()]);
 
         res.status(200).json({ message: 'Connection request sent successfully' });
     }
