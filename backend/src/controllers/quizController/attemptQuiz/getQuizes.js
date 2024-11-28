@@ -1,5 +1,5 @@
 // const express = require('express');
-const { Quiz } = require('../../models/quiz');
+const { Quiz } = require('../../../models/quiz');
 
 // Fetch quizzes by skill
 const getQuizes = async (req, res)=>{

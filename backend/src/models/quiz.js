@@ -8,11 +8,7 @@ const QuestionSchema = new mongoose.Schema({
     options: [{
         text: String,
         isCorrect: Boolean
-    }],
-    skill: {
-        type: String,
-        required: true
-    }
+    }]
 });
 
 const QuizSchema = new mongoose.Schema({

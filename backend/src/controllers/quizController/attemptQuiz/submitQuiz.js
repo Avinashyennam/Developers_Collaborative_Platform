@@ -1,5 +1,5 @@
-const { UserProgress } = require('../../models/quiz');
-
+const { UserProgress, Quiz } = require('../../../models/quiz');
+// const {Quiz} = require("../../models/quiz");
 const submitQuiz = async (req, res)=>{
     const {userId, quizId, responses} = req.body;
     let score = 0;
@@ -27,7 +27,7 @@ const submitQuiz = async (req, res)=>{
     
         res.json({ score, badge });
       } catch (err) {
-        res.status(500).send('Error submitting quiz');
+        res.status(500).json({message:'Error submitting quiz', err});
       }
 }
 
