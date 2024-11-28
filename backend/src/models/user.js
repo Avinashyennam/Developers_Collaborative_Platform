@@ -50,9 +50,9 @@ const userSchema = new mongoose.Schema({
         }
     ],
     blogs: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'Blog' 
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Blog'
         }
     ],
     createdAt: {
@@ -61,13 +61,37 @@ const userSchema = new mongoose.Schema({
     },
     pendingConnections: [
         {
-          from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Who sent the request
-          requestedAt: { type: Date, default: Date.now },
+            from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Who sent the request
+            requestedAt: { type: Date, default: Date.now },
         },
-      ],
-      connections: [
+    ],
+    connections: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Accepted connections
-      ],
+    ],
+    // badges: [{
+    //     skill: {
+    //         type: String, // Skill name like 'JavaScript', 'React', etc.
+    //         required: true,
+    //     },
+    //     level: {
+    //         type: String, // Level like 'Beginner', 'Intermediate', 'Expert'
+    //         required: true,
+    //     },
+    // }],
+    // recentScores: [{
+    //     skill: {
+    //         type: String, // Skill name like 'JavaScript', 'React', etc.
+    //         required: true,
+    //     },
+    //     score: {
+    //         type: Number, // The user's score
+    //         required: true,
+    //     },
+    //     maxScore: {
+    //         type: Number, // The maximum possible score for the quiz
+    //         required: true,
+    //     },
+    // }]
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -6,7 +6,8 @@ const cors = require("cors");
 dotenv.config();
 const authenticateToken = require("./middlewares/authenticateToken.js");
 const user = require("./routes/userRoutes.js");
-const Quiz = require("./routes/quizRoutes.js")
+const Quiz = require("./routes/quizRoutes.js");
+const Dashboard = require("./routes/dashboardRoutes.js");
 const mongouri = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5001;
 
@@ -125,6 +126,7 @@ app.post('/upload/:id', upload.single('image'), async (req, res) => {
 
 app.use("/api/users", user);
 app.use("/api/quizes", Quiz);
+app.use("/api/dashboard", Dashboard);
 app.listen(PORT, () => {
     console.log("server is running on port", PORT); // Fixed here
 });
